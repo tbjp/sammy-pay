@@ -1,8 +1,37 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@theme {
+  /* Font */
+  --font-family: "JetBrains Mono", monospace;
+  --font-display-pixel: "Press Start 2P", regular;
+
+  /* Backgrounds */
+  --color-bg-blue: #e1ecf0;
+  --color-bg-pink: #fffaff;
+  --color-bg-sky: #b4dcfc;
+
+  /* Accents */
+  --color-accent-aqua: #badde3;
+  --color-accent-lavender: #cdc5e8;
+  --color-accent-rose: #ecd2d1;
+  --color-accent-mint: #afebcb;
+  --color-accent-navy: #324e8f;
+
+  /* Text */
+  --color-text-default: #1e1e1e;
+  --color-text-navy: var(--color-accent-navy);
+  --color-text-white: #fffaff;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:
+    JetBrains Mono,
+    system-ui,
+    Avenir,
+    Helvetica,
+    Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -14,6 +43,46 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono-Regular.woff2"), format("woff2");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono-Italic.woff2"), format("woff2");
+  font-display: swap;
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono-Bold.woff2"), format("woff2");
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono-BoldItalic.woff2"), format("woff2");
+  font-display: swap;
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("./assets/fonts/PressStart2P-Regular.ttf"), format("truetype");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
 }
 
 a {
