@@ -5,7 +5,7 @@ import Star from "./assets/images/star.png";
 </script>
 
 <template>
-  <div class="flex flex-col h-screen w-[320px] overflow-hidden relative">
+  <div class="flex flex-col h-dvh max-w-[480px] w-dvw overflow-hidden relative">
     <div
       class="flex-1 flex flex-col gap-4 items-center overflow-y-auto hide-scrollbar"
     >
