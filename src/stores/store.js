@@ -17,6 +17,7 @@ export const useAppStore = defineStore('app', {
     },
     payPeriods: [],
     classes: [],
+    dataSeeded: false,
   }),
 
   actions: {
@@ -25,6 +26,7 @@ export const useAppStore = defineStore('app', {
       this.user = { id, email }
     },
     seedData() {
+      if (this.dataSeeded) return
       this.payPeriods = []
       this.classes = []
 
@@ -63,6 +65,8 @@ export const useAppStore = defineStore('app', {
           })
         }
       }
+
+      this.dataSeeded = true
     },
     // Pay Period actions
     addPayPeriod(startDate, endDate) {
@@ -101,7 +105,17 @@ export const useAppStore = defineStore('app', {
         Number(classItem.base_pay_per_class || 0) +
         Number(classItem.num_bonus_students || 0) * Number(classItem.bonus_pay_per_student || 0)
       )
-    }
+    },
+    // Get date formatted as "Wed MM/DD/YY"
+    getFormattedDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'short',
+      })
+    },
   },
 
   persist: true,

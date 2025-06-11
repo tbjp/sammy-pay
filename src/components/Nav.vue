@@ -9,15 +9,15 @@ import SettingsInactive from "../assets/images/icons/settings/inactive.png";
 </script>
 
 <template>
-  <div class="flex justify-around items-center w-full bg-accent-aqua h-12">
-    <SammyButton class="w-8 h-8">
+  <div class="flex justify-evenly items-center w-full bg-accent-aqua h-12">
+    <SammyButton class="w-6 h-6">
       <img :src="HomeActive" alt="Home" class="w-full h-full" />
     </SammyButton>
-    <SammyButton class="w-8 h-8">
-      <img :src="PayPeriodActive" alt="Pay Period" class="w-full h-full" />
+    <SammyButton class="w-6 h-6">
+      <img :src="PayPeriodInactive" alt="Pay Period" class="w-full h-full" />
     </SammyButton>
-    <SammyButton class="w-8 h-8">
-      <img :src="SettingsActive" alt="Settings" class="w-full h-full" />
+    <SammyButton class="w-6 h-6">
+      <img :src="SettingsInactive" alt="Settings" class="w-full h-full" />
     </SammyButton>
   </div>
 </template>

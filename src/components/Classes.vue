@@ -4,23 +4,42 @@ import { useAppStore } from "../stores/store";
 import Card from "./Card.vue";
 import SammyButton from "./SammyButton.vue";
 import Add from "../assets/images/icons/add.png";
+import ChevronRight from "../assets/images/icons/chevron/right.png";
 const appStore = useAppStore();
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 w-full">
+  <div class="flex flex-col gap-4 w-full pb-4">
     <div class="flex justify-between w-full">
       <h2 class="font-display-pixel text-sm text-left">Classes</h2>
       <SammyButton class="w-5 h-5">
-        <img :src="Add" alt="Add" class="w-full h-full" />
+        <img
+          :src="Add"
+          alt="Add"
+          class="w-full h-full"
+          @click="appStore.seedData()"
+        />
       </SammyButton>
     </div>
     <ul class="flex flex-col gap-4 w-full">
       <Card v-for="cls in appStore.classes" :key="cls.id" :hearts="true">
-        <div class="flex flex-col gap-1 text-left">
-          <h3 class="font-display-pixel text-sm">{{ cls.class_date }}</h3>
-          <p>{{ cls.num_students }} students</p>
-          <p>${{ cls.base_pay_per_class }}</p>
+        <div class="flex justify-between w-full">
+          <div class="flex flex-col gap-1 text-left">
+            <h3 class="font-display-pixel text-sm">
+              {{ appStore.getFormattedDate(cls.class_date) }}
+            </h3>
+            <p>{{ cls.num_students }} students</p>
+            <p>${{ cls.base_pay_per_class }} earned</p>
+          </div>
+          <div class="flex items-end">
+            <SammyButton class="w-5 h-5">
+              <img
+                :src="ChevronRight"
+                alt="Class Details"
+                class="w-full h-full"
+              />
+            </SammyButton>
+          </div>
         </div>
       </Card>
     </ul>
