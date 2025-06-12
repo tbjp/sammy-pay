@@ -5,7 +5,9 @@ import SammyButton from "../components/SammyButton.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
+import { useRouter } from "vue-router";
 const appStore = useAppStore();
+const router = useRouter();
 </script>
 
 <template>
@@ -33,7 +35,10 @@ const appStore = useAppStore();
             <p>${{ cls.base_pay_per_class }} earned</p>
           </div>
           <div class="flex items-end">
-            <SammyButton class="w-5 h-5">
+            <SammyButton
+              class="w-5 h-5"
+              @click="router.push(`/class/${cls.id}`)"
+            >
               <img
                 :src="ChevronRight"
                 alt="Class Details"
