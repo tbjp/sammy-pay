@@ -4,11 +4,13 @@ import Card from "../components/Card.vue";
 import SammyButton from "../components/SammyButton.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
+import Star from "../assets/images/star.webp";
 const appStore = useAppStore();
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 w-full pb-4">
+  <div class="flex flex-col gap-4 w-full pb-4 items-center">
+    <img :src="Star" alt="Star" class="w-32" />
     <div class="flex justify-between w-full">
       <h2 class="font-display-pixel text-sm text-left">Classes</h2>
       <SammyButton class="w-5 h-5">

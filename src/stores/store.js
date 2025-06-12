@@ -26,9 +26,12 @@ export const useAppStore = defineStore('app', {
       this.user = { id, email }
     },
     seedData() {
-      if (this.dataSeeded) return
-      this.payPeriods = []
-      this.classes = []
+      if (this.dataSeeded) {
+        this.payPeriods = []
+        this.classes = []
+        this.dataSeeded = false
+        return
+      }
 
       const today = new Date()
       const msInDay = 24 * 60 * 60 * 1000
@@ -114,6 +117,14 @@ export const useAppStore = defineStore('app', {
         month: '2-digit',
         day: '2-digit',
         weekday: 'short',
+      })
+    },
+    getFormattedDateNoDay(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
       })
     },
   },
