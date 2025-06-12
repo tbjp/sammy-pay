@@ -105,7 +105,7 @@ export const useAppStore = defineStore('app', {
 
     calculatePay(classItem) {
       return (
-        Number(classItem.base_pay_per_class || 0) +
+        Number(classItem.base_pay_per_class * classItem.num_students || 0) +
         Number(classItem.num_bonus_students || 0) * Number(classItem.bonus_pay_per_student || 0)
       )
     },
@@ -125,6 +125,27 @@ export const useAppStore = defineStore('app', {
         year: '2-digit',
         month: '2-digit',
         day: '2-digit',
+      })
+    },
+    getDayOfWeek(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+      })
+    },
+    // Get start and end time of class
+    getStartTime(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    },
+    getEndTime(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
       })
     },
   },

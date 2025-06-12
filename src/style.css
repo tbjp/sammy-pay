@@ -83,6 +83,8 @@
   font-display: block;
   font-weight: 400;
   font-style: normal;
+  /* not anti-aliasing */
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 body {
