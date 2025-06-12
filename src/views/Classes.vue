@@ -12,7 +12,7 @@ const router = useRouter();
 
 <template>
   <div class="flex flex-col gap-4 w-full pb-4 items-center">
-    <img :src="Star" alt="Star" class="w-32" />
+    <img :src="Star" alt="Star" class="w-32 min-h-28" />
     <div class="flex justify-between w-full">
       <h2 class="font-display-pixel text-sm text-left">Classes</h2>
       <SammyButton class="w-5 h-5">
