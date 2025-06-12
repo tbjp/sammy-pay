@@ -5,7 +5,6 @@ import { useAppStore } from "../stores/store";
 import SammyButton from "../components/SammyButton.vue";
 import ChevronLeft from "../assets/images/icons/chevron/left.png";
 import Edit from "../assets/images/icons/edit.png";
-import ChevronRight from "../assets/images/icons/chevron/right.png";
 import PayPeriodActive from "../assets/images/icons/payperiod/active.png";
 import PayPeriodInactive from "../assets/images/icons/payperiod/inactive.png";
 
@@ -72,11 +71,10 @@ if (!payPeriodData.value) {
             v-for="cls in appStore.getClassesForPayPeriod(payPeriodData.id)"
             :key="cls.id"
           >
-            <a
-              href="#"
+            <span
               @click="router.push(`/class/${cls.id}`)"
-              class="text-accent-navy hover:text-accent-navy/60"
-              >{{ appStore.getFormattedDate(cls.class_date) }}</a
+              class="text-accent-navy hover:text-accent-navy/60 cursor-pointer"
+              >{{ appStore.getFormattedDate(cls.class_date) }}</span
             >
             - ${{ appStore.calculatePay(cls) }}
           </li>
