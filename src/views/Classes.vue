@@ -14,9 +14,22 @@ const router = useRouter();
 
 const showModal = ref(false);
 
+const addClass = () => {
+  appStore.addClass(newClass.value);
+  toggleModal();
+};
+
 function toggleModal() {
   showModal.value = !showModal.value;
 }
+
+const newClass = ref({
+  class_date: "",
+  num_students: 1,
+  bonus_students: 0,
+  base_pay_per_class: 0,
+  bonus_pay_per_student: 0,
+});
 </script>
 
 <template>
@@ -26,7 +39,7 @@ function toggleModal() {
       <h2 class="font-display-pixel text-sm text-left">Classes</h2>
       <SammyButton class="w-5 h-5">
         <img
-          :src="Add"
+          :src="ChevronRight"
           alt="Add"
           class="w-full h-full"
           @click="appStore.seedData()"
@@ -81,27 +94,46 @@ function toggleModal() {
           <div class="p-3">
             <h3 class="text-lg font-bold mb-2">Add Class</h3>
             <form class="flex flex-col gap-4 text-xs text-left wrap-normal">
-              <input type="datetime-local" class="sammy-input" />
+              <input
+                type="datetime-local"
+                class="sammy-input"
+                v-model="newClass.class_date"
+              />
               <div class="flex gap-2">
-                <input type="number" class="sammy-input" />
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.num_students"
+                />
                 <div class="flex-1/3">total students</div>
               </div>
               <div class="flex gap-2">
-                <input type="number" class="sammy-input" />
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.bonus_students"
+                />
                 <div class="flex-1/3">bonus students</div>
               </div>
               <div class="flex gap-2">
-                <input type="number" class="sammy-input" />
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.base_pay_per_class"
+                />
                 <div class="flex-1/3">base pay per class</div>
               </div>
               <div class="flex gap-2">
-                <input type="number" class="sammy-input" />
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.bonus_pay_per_student"
+                />
                 <div class="flex-1/3">bonus pay per student</div>
               </div>
+              <!-- TODO Stop the page refreshing -->
+              <button class="btn" @click="addClass()">Add Class</button>
             </form>
-            <div class="modal-action">
-              <button class="btn" @click="toggleModal()">Close</button>
-            </div>
           </div>
         </div>
       </div>
