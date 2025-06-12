@@ -33,7 +33,7 @@ const router = useRouter();
               {{ appStore.getFormattedDateNoDay(pp.end_date) }}
             </h3>
             <div class="h-[1em]"></div>
-            <p>${{ appStore.calculatePay(pp) }} earned</p>
+            <p>${{ appStore.calculatePayPeriod(pp) }} earned</p>
           </div>
           <div class="flex items-end">
             <SammyButton

@@ -1,15 +1,19 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAppStore } from "../stores/store";
 import SammyButton from "../components/SammyButton.vue";
 import ChevronLeft from "../assets/images/icons/chevron/left.png";
 import Edit from "../assets/images/icons/edit.png";
+import ChevronRight from "../assets/images/icons/chevron/right.png";
+import PayPeriodActive from "../assets/images/icons/payperiod/active.png";
+import PayPeriodInactive from "../assets/images/icons/payperiod/inactive.png";
 
 const route = useRoute();
 const router = useRouter();
 const appStore = useAppStore();
 
+const showClasses = ref(false);
 const payPeriodId = computed(() => route.params.id);
 const payPeriodData = computed(() =>
   appStore.payPeriods?.find(
@@ -43,10 +47,44 @@ if (!payPeriodData.value) {
       <h3 class="font-display-pixel text-lg">
         {{ appStore.getFormattedDateNoDay(payPeriodData.end_date) }}
       </h3>
-      <p># of total classes</p>
+      <div class="flex flex-col gap-2">
+        <div class="flex justify-start w-full items-center gap-2">
+          <p>
+            {{ appStore.getClassesForPayPeriod(payPeriodData.id).length }}
+            classes
+          </p>
+          <!-- button to show or hide list -->
+          <SammyButton
+            class="w-6 h-6 pb-1"
+            @click="showClasses = !showClasses"
+            :class="showClasses ? 'rotate-360' : ''"
+          >
+            <!-- maintain aspect ratio of img -->
+            <img
+              :src="showClasses ? PayPeriodActive : PayPeriodInactive"
+              alt="Show Classes"
+              class="w-full object-contain h-full"
+            />
+          </SammyButton>
+        </div>
+        <ul class="flex flex-col gap-1" v-if="showClasses">
+          <li
+            v-for="cls in appStore.getClassesForPayPeriod(payPeriodData.id)"
+            :key="cls.id"
+          >
+            <a
+              href="#"
+              @click="router.push(`/class/${cls.id}`)"
+              class="text-accent-navy hover:text-accent-navy/60"
+              >{{ appStore.getFormattedDate(cls.class_date) }}</a
+            >
+            - ${{ appStore.calculatePay(cls) }}
+          </li>
+        </ul>
+      </div>
     </div>
     <p class="font-display-pixel text-lg text-center">
-      ${{ appStore.calculatePay(payPeriodData) }} earned!
+      ${{ appStore.calculatePayPeriod(payPeriodData) }} earned!
     </p>
     <div class="text-center mb-4">
       <div>/)____/)</div>

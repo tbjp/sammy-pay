@@ -1,6 +1,5 @@
 <script setup>
 import Nav from "./components/Nav.vue";
-import Classes from "./views/Classes.vue";
 </script>
 
 <template>
