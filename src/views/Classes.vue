@@ -1,8 +1,7 @@
-// Component that shows a list of classes
 <script setup>
 import { useAppStore } from "../stores/store";
-import Card from "./Card.vue";
-import SammyButton from "./SammyButton.vue";
+import Card from "../components/Card.vue";
+import SammyButton from "../components/SammyButton.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 const appStore = useAppStore();
