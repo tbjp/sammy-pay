@@ -31,7 +31,7 @@ if (!payPeriodData.value) {
   <div v-if="payPeriodData" class="flex flex-col gap-4 w-full">
     <!-- Div with a button on the left side and button on the right side -->
     <div class="flex justify-between w-full">
-      <SammyButton class="w-8 h-8" @click="router.push('/pay-periods')">
+      <SammyButton class="w-8 h-8" @click="router.back()">
         <img :src="ChevronLeft" alt="Back" class="w-full h-full" />
       </SammyButton>
       <SammyButton class="w-8 h-8">
