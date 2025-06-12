@@ -131,7 +131,7 @@ const newClass = ref({
                 />
                 <div class="flex-1/3">bonus pay per student</div>
               </div>
-              <!-- TODO Stop the page refreshing -->
+              <!-- TODO Stop the page refreshing and check valid inputs -->
               <button class="btn" @click="addClass()">Add Class</button>
             </form>
           </div>
