@@ -43,12 +43,20 @@ if (!classData.value) {
         {{ appStore.getEndTime(classData.class_date) }}
       </p>
       <p>{{ classData.num_students }} total students</p>
-      <p>{{ classData.num_bonus_students }} bonus students</p>
+      <p>{{ classData.num_bonus_students }} pre bonus students</p>
       <!-- Pay per student -->
-      <p>${{ classData.base_pay_per_class }} per student</p>
+      <p>${{ classData.base_pay_per_class }} per class</p>
       <!-- Pay per bonus student -->
       <p>${{ classData.bonus_pay_per_student }} per bonus student</p>
-      <p>${{ appStore.calculatePay(classData) }} earned</p>
+      <p class="font-display-pixel text-lg text-center">
+        ${{ appStore.calculatePay(classData) }} earned!
+      </p>
+      <div class="text-center mb-4">
+        <div>/)____/)</div>
+        <div>( ◠ ◡ ◠)</div>
+        <div>| >💵< |</div>
+        <div>-0---0-</div>
+      </div>
     </div>
   </div>
 </template>

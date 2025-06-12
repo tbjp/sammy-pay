@@ -105,8 +105,8 @@ export const useAppStore = defineStore('app', {
 
     calculatePay(classItem) {
       return (
-        Number(classItem.base_pay_per_class * classItem.num_students || 0) +
-        Number(classItem.num_bonus_students || 0) * Number(classItem.bonus_pay_per_student || 0)
+        Number(classItem.base_pay_per_class|| 0) +
+        Number(classItem.num_students - classItem.num_bonus_students || 0) * Number(classItem.bonus_pay_per_student || 0)
       )
     },
     // Get date formatted as "Wed MM/DD/YY"

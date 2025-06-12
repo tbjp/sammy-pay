@@ -44,7 +44,15 @@ if (!payPeriodData.value) {
         {{ appStore.getFormattedDateNoDay(payPeriodData.end_date) }}
       </h3>
       <p># of total classes</p>
-      <p>${{ appStore.calculatePay(payPeriodData) }} earned</p>
+    </div>
+    <p class="font-display-pixel text-lg text-center">
+      ${{ appStore.calculatePay(payPeriodData) }} earned!
+    </p>
+    <div class="text-center mb-4">
+      <div>/)____/)</div>
+      <div>( ◠ ◡ ◠)</div>
+      <div>| >💵< |</div>
+      <div>-0---0-</div>
     </div>
   </div>
 </template>
