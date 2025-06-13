@@ -49,7 +49,7 @@ if (!payPeriodData.value) {
       <div class="flex flex-col gap-2">
         <div class="flex justify-start w-full items-center gap-2">
           <p>
-            {{ appStore.getClassesForPayPeriod(payPeriodData.id).length }}
+            {{ appStore.getClassesForPayPeriod(payPeriodData).length }}
             classes
           </p>
           <!-- button to show or hide list -->
@@ -68,7 +68,7 @@ if (!payPeriodData.value) {
         </div>
         <ul class="flex flex-col gap-1" v-if="showClasses">
           <li
-            v-for="cls in appStore.getClassesForPayPeriod(payPeriodData.id)"
+            v-for="cls in appStore.getClassesForPayPeriod(payPeriodData)"
             :key="cls.id"
           >
             <span

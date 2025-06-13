@@ -15,10 +15,40 @@ const router = useRouter();
 const showModal = ref(false);
 
 const addClass = () => {
+  console.log(newClass.value);
   // Add validation here if needed
   if (!newClass.value.class_date) {
     alert("Please select a class date");
     return;
+  }
+  const validationRules = [
+    {
+      field: "num_students",
+      min: 1,
+      message: "Number of students must be at least 1",
+    },
+    {
+      field: "num_bonus_students",
+      min: 0,
+      message: "Number of bonus students must be at least 0",
+    },
+    {
+      field: "base_pay_per_class",
+      min: 0,
+      message: "Base pay per class must be at least 0",
+    },
+    {
+      field: "bonus_pay_per_student",
+      min: 0,
+      message: "Bonus pay per student must be at least 0",
+    },
+  ];
+
+  for (const rule of validationRules) {
+    if (newClass.value[rule.field] < rule.min) {
+      alert(rule.message);
+      return;
+    }
   }
 
   appStore.addClass(newClass.value);
@@ -123,6 +153,8 @@ const newClass = ref({
                   type="number"
                   class="sammy-input"
                   v-model="newClass.num_students"
+                  min="1"
+                  step="1"
                 />
                 <div class="flex-1/3">total students</div>
               </div>
@@ -131,14 +163,18 @@ const newClass = ref({
                   type="number"
                   class="sammy-input"
                   v-model="newClass.num_bonus_students"
+                  min="0"
+                  step="1"
                 />
-                <div class="flex-1/3">bonus students</div>
+                <div class="flex-1/3">pre bonus students</div>
               </div>
               <div class="flex gap-2">
                 <input
                   type="number"
                   class="sammy-input"
                   v-model="newClass.base_pay_per_class"
+                  min="0"
+                  step="0.01"
                 />
                 <div class="flex-1/3">base pay per class</div>
               </div>
@@ -147,10 +183,11 @@ const newClass = ref({
                   type="number"
                   class="sammy-input"
                   v-model="newClass.bonus_pay_per_student"
+                  min="0"
+                  step="0.01"
                 />
                 <div class="flex-1/3">bonus pay per student</div>
               </div>
-              <!-- TODO Stop the page refreshing and check valid inputs -->
               <button type="submit" class="btn">Add Class</button>
             </form>
           </div>
@@ -162,11 +199,3 @@ const newClass = ref({
     </dialog>
   </div>
 </template>
-
-<style scoped>
-@reference "../style.css";
-
-.sammy-input {
-  @apply bg-bg-sky italic border border-accent-navy rounded p-2 flex-2/3;
-}
-</style>

@@ -72,12 +72,12 @@ export const useAppStore = defineStore('app', {
       this.dataSeeded = true
     },
     // Pay Period actions
-    addPayPeriod(startDate, endDate) {
+    addPayPeriod({ start_date, end_date }) {
       const newPeriod = {
         id: crypto.randomUUID(),
         user_id: this.user.id,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: start_date,
+        end_date: end_date,
         created_at: new Date().toISOString(),
       }
       this.payPeriods.unshift(newPeriod)
@@ -99,8 +99,8 @@ export const useAppStore = defineStore('app', {
       this.classes.unshift(newClass)
     },
 
-    getClassesForPayPeriod(pay_period_id) {
-      return this.classes.filter(cls => cls.pay_period_id === pay_period_id)
+    getClassesForPayPeriod({start_date, end_date}) {
+      return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= end_date)
     },
 
     calculatePay(classItem) {
@@ -110,7 +110,7 @@ export const useAppStore = defineStore('app', {
       )
     },
     calculatePayPeriod(payPeriod) {
-      const classes = this.getClassesForPayPeriod(payPeriod.id)
+      const classes = this.getClassesForPayPeriod(payPeriod)
       return classes.reduce((total, cls) => total + this.calculatePay(cls), 0)
     },
     // Get date formatted as "Wed MM/DD/YY"
