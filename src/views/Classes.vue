@@ -15,7 +15,23 @@ const router = useRouter();
 const showModal = ref(false);
 
 const addClass = () => {
+  // Add validation here if needed
+  if (!newClass.value.class_date) {
+    alert("Please select a class date");
+    return;
+  }
+
   appStore.addClass(newClass.value);
+
+  // Reset form after successful submission
+  newClass.value = {
+    class_date: "",
+    num_students: 1,
+    num_bonus_students: 0,
+    base_pay_per_class: 0,
+    bonus_pay_per_student: 0,
+  };
+
   toggleModal();
 };
 
@@ -26,7 +42,7 @@ function toggleModal() {
 const newClass = ref({
   class_date: "",
   num_students: 1,
-  bonus_students: 0,
+  num_bonus_students: 0,
   base_pay_per_class: 0,
   bonus_pay_per_student: 0,
 });
@@ -93,7 +109,10 @@ const newClass = ref({
           </div>
           <div class="p-3">
             <h3 class="text-lg font-bold mb-2">Add Class</h3>
-            <form class="flex flex-col gap-4 text-xs text-left wrap-normal">
+            <form
+              class="flex flex-col gap-4 text-xs text-left wrap-normal"
+              @submit.prevent="addClass"
+            >
               <input
                 type="datetime-local"
                 class="sammy-input"
@@ -111,7 +130,7 @@ const newClass = ref({
                 <input
                   type="number"
                   class="sammy-input"
-                  v-model="newClass.bonus_students"
+                  v-model="newClass.num_bonus_students"
                 />
                 <div class="flex-1/3">bonus students</div>
               </div>
@@ -132,7 +151,7 @@ const newClass = ref({
                 <div class="flex-1/3">bonus pay per student</div>
               </div>
               <!-- TODO Stop the page refreshing and check valid inputs -->
-              <button class="btn" @click="addClass()">Add Class</button>
+              <button type="submit" class="btn">Add Class</button>
             </form>
           </div>
         </div>
