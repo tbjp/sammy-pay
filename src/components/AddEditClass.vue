@@ -2,6 +2,8 @@
 import { ref, watch } from "vue";
 import { useAppStore } from "../stores/store";
 import Exit from "../assets/images/icons/exit.png";
+import Delete from "../assets/images/icons/delete.png";
+import PixelButton from "./PixelButton.vue";
 
 const props = defineProps({
   showModal: {
@@ -14,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits(["closeModal", "onClassDeleted"]);
 
 const appStore = useAppStore();
 
@@ -75,6 +77,11 @@ function toggleModal() {
   emit("closeModal");
 }
 
+function deleteClass() {
+  appStore.deleteClass(props.currentClass.id);
+  emit("onClassDeleted");
+}
+
 const newClass = ref({
   class_date: "",
   num_students: 1,
@@ -96,7 +103,7 @@ watch(
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': showModal }" data-theme="light">
+  <dialog class="modal" :class="{ 'modal-open': showModal }">
     <div class="modal-box bg-transparent shadow-none">
       <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-full">
         <div
@@ -159,14 +166,15 @@ watch(
               />
               <div class="flex-1/3">bonus pay per student</div>
             </div>
-            <button type="submit" class="btn">
-              {{ currentClass ? "Edit Class" : "Add Class" }}
+            <PixelButton>{{ currentClass ? "EDIT" : "ADD" }}</PixelButton>
+            <button @click="deleteClass()">
+              <img :src="Delete" alt="Delete" class="w-6 h-6" />
             </button>
           </form>
         </div>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" data-theme="light">
+    <form method="dialog" class="modal-backdrop">
       <button @click="toggleModal()">close</button>
     </form>
   </dialog>

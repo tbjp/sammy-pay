@@ -83,6 +83,20 @@ export const useAppStore = defineStore('app', {
       this.payPeriods.unshift(newPeriod)
     },
 
+    editPayPeriod({ id, start_date, end_date }) {
+      const periodItem = this.payPeriods.find(period => period.id === id)
+      if (!periodItem) {
+        console.error(`Pay period with id ${id} not found`)
+        return
+      }
+      periodItem.start_date = start_date
+      periodItem.end_date = end_date
+    },
+
+    deletePayPeriod(id) {
+      this.payPeriods = this.payPeriods.filter(period => period.id !== id)
+    },
+
     // Class actions
     addClass({ pay_period_id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student }) {
       const newClass = {
@@ -110,6 +124,10 @@ export const useAppStore = defineStore('app', {
       classItem.num_bonus_students = num_bonus_students
       classItem.base_pay_per_class = base_pay_per_class
       classItem.bonus_pay_per_student = bonus_pay_per_student
+    },
+
+    deleteClass(id) {
+      this.classes = this.classes.filter(cls => cls.id !== id)
     },
 
     getClassesForPayPeriod({start_date, end_date}) {

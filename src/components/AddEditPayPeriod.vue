@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { useAppStore } from "../stores/store";
 import Exit from "../assets/images/icons/exit.png";
+import PixelButton from "./PixelButton.vue";
 
 const props = defineProps({
   showModal: {
@@ -78,7 +79,7 @@ watch(
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': showModal }" data-theme="light">
+  <dialog class="modal" :class="{ 'modal-open': showModal }">
     <div class="modal-box bg-transparent shadow-none">
       <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-full">
         <div
@@ -110,14 +111,12 @@ watch(
               />
               <div class="flex-1/3">end date</div>
             </div>
-            <button type="submit" class="btn">
-              {{ currentPayPeriod ? "Edit Pay Period" : "Add Pay Period" }}
-            </button>
+            <PixelButton>{{ currentPayPeriod ? "EDIT" : "ADD" }}</PixelButton>
           </form>
         </div>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" data-theme="light">
+    <form method="dialog" class="modal-backdrop">
       <button @click="toggleModal()">close</button>
     </form>
   </dialog>

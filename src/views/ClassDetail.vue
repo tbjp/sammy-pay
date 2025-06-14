@@ -26,6 +26,10 @@ if (!classData.value) {
 function toggleModal() {
   showModal.value = !showModal.value;
 }
+
+function onClassDeleted() {
+  router.push("/");
+}
 </script>
 
 <template>
@@ -71,6 +75,7 @@ function toggleModal() {
       <classModal
         :showModal="showModal"
         @closeModal="toggleModal()"
+        @onClassDeleted="onClassDeleted()"
         :currentClass="classData"
       />
     </div>
