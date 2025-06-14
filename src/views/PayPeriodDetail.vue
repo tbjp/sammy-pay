@@ -7,6 +7,7 @@ import ChevronLeft from "../assets/images/icons/chevron/left.png";
 import Edit from "../assets/images/icons/edit.png";
 import PayPeriodActive from "../assets/images/icons/payperiod/active.png";
 import PayPeriodInactive from "../assets/images/icons/payperiod/inactive.png";
+import PayPeriodModal from "../components/PayPeriodModal.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -24,6 +25,12 @@ const payPeriodData = computed(() =>
 if (!payPeriodData.value) {
   router.push("/pay-period");
 }
+
+const showModal = ref(false);
+
+function toggleModal() {
+  showModal.value = !showModal.value;
+}
 </script>
 
 <template>
@@ -33,7 +40,7 @@ if (!payPeriodData.value) {
       <SammyButton class="w-8 h-8" @click="router.back()">
         <img :src="ChevronLeft" alt="Back" class="w-full h-full" />
       </SammyButton>
-      <SammyButton class="w-8 h-8">
+      <SammyButton class="w-8 h-8" @click="toggleModal()">
         <!-- maintain aspect ratio of img -->
         <img :src="Edit" alt="Edit" class="w-full object-contain h-full" />
       </SammyButton>
@@ -91,4 +98,9 @@ if (!payPeriodData.value) {
       <div>-0---0-</div>
     </div>
   </div>
+  <PayPeriodModal
+    :showModal="showModal"
+    @closeModal="toggleModal()"
+    :currentPayPeriod="payPeriodData"
+  />
 </template>

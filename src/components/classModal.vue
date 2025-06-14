@@ -1,12 +1,16 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useAppStore } from "../stores/store";
 import Exit from "../assets/images/icons/exit.png";
 
-defineProps({
+const props = defineProps({
   showModal: {
     type: Boolean,
     required: true,
+  },
+  currentClass: {
+    type: Object,
+    required: false,
   },
 });
 
@@ -14,7 +18,7 @@ const emit = defineEmits(["closeModal"]);
 
 const appStore = useAppStore();
 
-const addClass = () => {
+const handleSubmit = () => {
   console.log(newClass.value);
   // Add validation here if needed
   if (!newClass.value.class_date) {
@@ -51,7 +55,11 @@ const addClass = () => {
     }
   }
 
-  appStore.addClass(newClass.value);
+  if (props.currentClass) {
+    appStore.editClass(newClass.value);
+  } else {
+    appStore.addClass(newClass.value);
+  }
 
   // Reset form after successful submission
   newClass.value = {
@@ -76,6 +84,17 @@ const newClass = ref({
   base_pay_per_class: 0,
   bonus_pay_per_student: 0,
 });
+
+watch(
+  () => props.showModal,
+  (isOpen) => {
+    if (isOpen) {
+      if (props.currentClass) {
+        newClass.value = { ...props.currentClass };
+      }
+    }
+  },
+);
 </script>
 
 <template>
@@ -90,10 +109,12 @@ const newClass = ref({
           </div>
         </div>
         <div class="p-3">
-          <h3 class="text-lg font-bold mb-2">Add Class</h3>
+          <h3 class="text-lg font-bold mb-2">
+            {{ currentClass ? "Edit Class" : "Add Class" }}
+          </h3>
           <form
             class="flex flex-col gap-4 text-xs text-left wrap-normal"
-            @submit.prevent="addClass"
+            @submit.prevent="handleSubmit"
           >
             <input
               type="datetime-local"
@@ -140,7 +161,9 @@ const newClass = ref({
               />
               <div class="flex-1/3">bonus pay per student</div>
             </div>
-            <button type="submit" class="btn">Add Class</button>
+            <button type="submit" class="btn">
+              {{ currentClass ? "Edit Class" : "Add Class" }}
+            </button>
           </form>
         </div>
       </div>

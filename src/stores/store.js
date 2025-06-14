@@ -99,6 +99,19 @@ export const useAppStore = defineStore('app', {
       this.classes.unshift(newClass)
     },
 
+    editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student }) {
+      const classItem = this.classes.find(cls => cls.id === id)
+      if (!classItem) {
+        console.error(`Class with id ${id} not found`)
+        return
+      }
+      classItem.class_date = class_date
+      classItem.num_students = num_students
+      classItem.num_bonus_students = num_bonus_students
+      classItem.base_pay_per_class = base_pay_per_class
+      classItem.bonus_pay_per_student = bonus_pay_per_student
+    },
+
     getClassesForPayPeriod({start_date, end_date}) {
       return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= end_date)
     },
