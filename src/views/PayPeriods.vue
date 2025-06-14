@@ -1,13 +1,13 @@
 <script setup>
 import { useAppStore } from "../stores/store";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 import Card from "../components/Card.vue";
 import SammyButton from "../components/SammyButton.vue";
 import PayPeriodModal from "../components/PayPeriodModal.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Heart from "../assets/images/heart.webp";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
 
 const appStore = useAppStore();
 const router = useRouter();
