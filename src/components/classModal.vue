@@ -19,8 +19,6 @@ const emit = defineEmits(["closeModal"]);
 const appStore = useAppStore();
 
 const handleSubmit = () => {
-  console.log(newClass.value);
-  // Add validation here if needed
   if (!newClass.value.class_date) {
     alert("Please select a class date");
     return;
