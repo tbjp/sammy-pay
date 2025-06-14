@@ -6,7 +6,7 @@ import { ref } from "vue";
 import SammyButton from "../components/SammyButton.vue";
 import ChevronLeft from "../assets/images/icons/chevron/left.png";
 import Edit from "../assets/images/icons/edit.png";
-import classModal from "../components/ClassModal.vue";
+import classModal from "../components/AddEditClass.vue";
 
 const showModal = ref(false);
 const route = useRoute();

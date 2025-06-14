@@ -7,7 +7,7 @@ import ChevronLeft from "../assets/images/icons/chevron/left.png";
 import Edit from "../assets/images/icons/edit.png";
 import PayPeriodActive from "../assets/images/icons/payperiod/active.png";
 import PayPeriodInactive from "../assets/images/icons/payperiod/inactive.png";
-import PayPeriodModal from "../components/PayPeriodModal.vue";
+import PayPeriodModal from "../components/AddEditPayPeriod.vue";
 
 const route = useRoute();
 const router = useRouter();
