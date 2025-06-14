@@ -99,7 +99,7 @@ watch(
 
 <template>
   <dialog class="modal" :class="{ 'modal-open': showModal }">
-    <div class="modal-box bg-transparent">
+    <div class="modal-box bg-transparent shadow-none">
       <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-full">
         <div
           class="bg-accent-lavender border-b border-accent-navy rounded-t h-[24px] flex items-center justify-end pe-2"
