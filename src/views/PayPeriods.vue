@@ -15,6 +15,9 @@ const router = useRouter();
 const showModal = ref(false);
 
 function toggleModal() {
+  console.log("Toggling modal");
+  console.log("Current showModal value:", showModal.value);
+  console.log("App store pay periods:", appStore.payPeriods);
   showModal.value = !showModal.value;
 }
 </script>
