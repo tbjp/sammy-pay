@@ -7,7 +7,7 @@ import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import classModal from "../components/ClassModal.vue";
+import ClassModal from "../components/ClassModal.vue";
 
 const appStore = useAppStore();
 const router = useRouter();
@@ -66,6 +66,6 @@ function toggleModal() {
         </div>
       </Card>
     </ul>
-    <classModal :showModal="showModal" @closeModal="toggleModal()" />
+    <ClassModal :showModal="showModal" @closeModal="toggleModal()" />
   </div>
 </template>
