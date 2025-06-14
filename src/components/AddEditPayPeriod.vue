@@ -117,7 +117,7 @@ watch(
         </div>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop">
+    <form method="dialog" class="modal-backdrop" data-theme="light">
       <button @click="toggleModal()">close</button>
     </form>
   </dialog>
