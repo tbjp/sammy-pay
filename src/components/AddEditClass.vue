@@ -96,7 +96,7 @@ watch(
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': showModal }">
+  <dialog class="modal" :class="{ 'modal-open': showModal }" data-theme="light">
     <div class="modal-box bg-transparent shadow-none">
       <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-full">
         <div
