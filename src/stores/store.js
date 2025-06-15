@@ -145,7 +145,10 @@ export const useAppStore = defineStore('app', {
     },
 
     getClassesForPayPeriod({start_date, end_date}) {
-      return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= end_date)
+      const endDatePlusOne = new Date(end_date)
+      endDatePlusOne.setDate(endDatePlusOne.getDate() + 1)
+      const endDateISOString = endDatePlusOne.toISOString().split("T")[0]
+      return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= endDateISOString)
     },
 
     calculatePay(classItem) {

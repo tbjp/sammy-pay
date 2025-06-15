@@ -1,21 +1,35 @@
 <script setup>
 import { useAppStore } from "../stores/store";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ref } from "vue";
 import Card from "../components/Card.vue";
 import SammyButton from "../components/SammyButton.vue";
 import ClassModal from "../components/AddEditClass.vue";
+import ConfirmationModal from "../components/ConfirmationModal.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
 
 const appStore = useAppStore();
 const router = useRouter();
+const route = useRoute();
 
 const showModal = ref(false);
+const showConfirmationModal = ref(false);
+const confirmationMessage = ref("");
+
+if (route.query.modal) {
+  confirmationMessage.value = route.query.modal;
+  showConfirmationModal.value = true;
+}
 
 function toggleModal() {
   showModal.value = !showModal.value;
+}
+
+function toggleConfirmationModal() {
+  showConfirmationModal.value = !showConfirmationModal.value;
+  router.replace({ query: { modal: null } });
 }
 </script>
 
@@ -67,5 +81,10 @@ function toggleModal() {
       </Card>
     </ul>
     <ClassModal :showModal="showModal" @closeModal="toggleModal()" />
+    <ConfirmationModal
+      :showConfirmationModal="showConfirmationModal"
+      @closeConfirmationModal="toggleConfirmationModal()"
+      :confirmationMessage="confirmationMessage"
+    />
   </div>
 </template>

@@ -3,6 +3,8 @@ import { ref, watch } from "vue";
 import { useAppStore } from "../stores/store";
 import Exit from "../assets/images/icons/exit.png";
 import PixelButton from "./PixelButton.vue";
+import Calendar from "../assets/images/icons/calendar.png";
+import Delete from "../assets/images/icons/delete.png";
 
 const props = defineProps({
   showModal: {
@@ -15,7 +17,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits(["closeModal", "onPayPeriodDeleted"]);
 
 const appStore = useAppStore();
 
@@ -64,6 +66,19 @@ function toggleModal() {
   emit("closeModal");
 }
 
+function calculatePayPeriodDays() {
+  const startDate = new Date(newPayPeriod.value.start_date);
+  const endDate = new Date(newPayPeriod.value.end_date);
+  const timeDiff = endDate.getTime() - startDate.getTime();
+  const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  return dayDiff + 1;
+}
+
+function deletePayPeriod() {
+  appStore.deletePayPeriod(props.currentPayPeriod.id);
+  emit("onPayPeriodDeleted");
+}
+
 const newPayPeriod = ref({
   start_date: "",
   end_date: "",
@@ -91,8 +106,8 @@ watch(
 
 <template>
   <dialog class="modal" :class="{ 'modal-open': showModal }">
-    <div class="modal-box bg-transparent shadow-none">
-      <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-full">
+    <div class="modal-box flex justify-center bg-transparent shadow-none">
+      <div class="bg-bg-pink min-h-24 border border-accent-navy rounded w-80">
         <div
           class="bg-accent-lavender border-b border-accent-navy rounded-t h-[24px] flex items-center justify-end pe-2"
         >
@@ -101,30 +116,45 @@ watch(
           </div>
         </div>
         <div class="p-3">
-          <h3 class="text-lg font-bold mb-2">
+          <h3 class="text-lg font-display-pixel my-4">
             {{ currentPayPeriod ? "Edit Pay Period" : "Add Pay Period" }}
           </h3>
           <form
-            class="flex flex-col gap-4 text-xs text-left wrap-normal"
+            class="flex flex-col gap-4 text-xs text-left wrap-normal px-4"
             @submit.prevent="handleSubmit"
           >
-            <div class="flex gap-2">
+            <div class="flex">
+              <span class="w-10 h-6">
+                <img :src="Calendar" alt="Calendar" class="w-6 h-6" />
+              </span>
               <input
                 type="date"
                 class="sammy-input"
                 v-model="newPayPeriod.start_date"
               />
-              <div class="flex-1/3">start date</div>
             </div>
-            <div class="flex gap-2">
+            <div class="flex justify-center text-lg">to</div>
+            <div class="flex">
+              <span class="w-10 h-6"> </span>
               <input
                 type="date"
                 class="sammy-input"
                 v-model="newPayPeriod.end_date"
               />
-              <div class="flex-1/3">end date</div>
             </div>
-            <PixelButton>{{ currentPayPeriod ? "EDIT" : "ADD" }}</PixelButton>
+            <p
+              class="font-display-pixel text-base text-center"
+              v-if="newPayPeriod.start_date && newPayPeriod.end_date"
+            >
+              This pay period has
+              {{ calculatePayPeriodDays() }} days.
+            </p>
+            <div class="flex justify-center gap-10">
+              <PixelButton>{{ currentPayPeriod ? "EDIT" : "ADD" }}</PixelButton>
+              <button @click="deletePayPeriod()" v-if="currentPayPeriod">
+                <img :src="Delete" alt="Delete" class="w-8 h-8" />
+              </button>
+            </div>
           </form>
         </div>
       </div>

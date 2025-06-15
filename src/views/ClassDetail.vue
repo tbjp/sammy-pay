@@ -28,7 +28,7 @@ function toggleModal() {
 }
 
 function onClassDeleted() {
-  router.push("/");
+  router.push({ path: "/", query: { modal: "classDeleted" } });
 }
 </script>
 

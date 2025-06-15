@@ -31,6 +31,10 @@ const showModal = ref(false);
 function toggleModal() {
   showModal.value = !showModal.value;
 }
+
+function onPayPeriodDeleted() {
+  router.push("/pay-periods");
+}
 </script>
 
 <template>
@@ -103,6 +107,7 @@ function toggleModal() {
     <PayPeriodModal
       :showModal="showModal"
       @closeModal="toggleModal()"
+      @onPayPeriodDeleted="onPayPeriodDeleted()"
       :currentPayPeriod="payPeriodData"
     />
   </div>
