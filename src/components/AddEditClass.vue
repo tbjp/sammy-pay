@@ -68,6 +68,8 @@ const handleSubmit = () => {
     num_bonus_students: 0,
     base_pay_per_class: 0,
     bonus_pay_per_student: 0,
+    hours: null,
+    minutes: null,
   };
 
   toggleModal();
@@ -88,6 +90,8 @@ const newClass = ref({
   num_bonus_students: 0,
   base_pay_per_class: 0,
   bonus_pay_per_student: 0,
+  hours: null,
+  minutes: null,
 });
 
 watch(
@@ -96,6 +100,13 @@ watch(
     if (isOpen) {
       if (props.currentClass) {
         newClass.value = { ...props.currentClass };
+        const diff =
+          Date.parse(props.currentClass.end_time) -
+          Date.parse(props.currentClass.class_date);
+        newClass.value.hours = Math.floor(diff / (1000 * 60 * 60));
+        newClass.value.minutes = Math.floor(
+          (diff % (1000 * 60 * 60)) / (1000 * 60),
+        );
       }
     }
   },
@@ -126,6 +137,28 @@ watch(
               class="sammy-input"
               v-model="newClass.class_date"
             />
+            <div class="flex items-center gap-2">
+              <input
+                type="number"
+                class="sammy-input w-[6em] unflex"
+                v-model="newClass.hours"
+                min="1"
+                max="99"
+                step="1"
+                placeholder="hh"
+              />
+              <div class="">:</div>
+              <input
+                type="number"
+                class="sammy-input w-[6em] unflex"
+                v-model="newClass.minutes"
+                min="0"
+                max="59"
+                step="1"
+                placeholder="mm"
+              />
+              <div class="flex-1/3">class length</div>
+            </div>
             <div class="flex gap-2">
               <input
                 type="number"

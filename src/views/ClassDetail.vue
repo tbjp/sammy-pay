@@ -54,7 +54,7 @@ function onClassDeleted() {
         <!-- Start time and end time -->
         <p>
           {{ appStore.getStartTime(classData.class_date) }} -
-          {{ appStore.getEndTime(classData.class_date) }}
+          {{ appStore.getEndTime(classData.end_time) }}
         </p>
         <p>{{ classData.num_students }} total students</p>
         <p>{{ classData.num_bonus_students }} pre bonus students</p>

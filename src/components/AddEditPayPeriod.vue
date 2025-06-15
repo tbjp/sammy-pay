@@ -45,8 +45,11 @@ const handleSubmit = () => {
       return;
     }
   }
-
-  appStore.addPayPeriod(newPayPeriod.value);
+  if (props.currentPayPeriod) {
+    appStore.editPayPeriod(newPayPeriod.value);
+  } else {
+    appStore.addPayPeriod(newPayPeriod.value);
+  }
 
   // Reset form after successful submission
   newPayPeriod.value = {
@@ -72,6 +75,14 @@ watch(
     if (isOpen) {
       if (props.currentPayPeriod) {
         newPayPeriod.value = { ...props.currentPayPeriod };
+        newPayPeriod.value.start_date = new Date(
+          props.currentPayPeriod.start_date,
+        )
+          .toISOString()
+          .split("T")[0];
+        newPayPeriod.value.end_date = new Date(props.currentPayPeriod.end_date)
+          .toISOString()
+          .split("T")[0];
       }
     }
   },
@@ -90,7 +101,9 @@ watch(
           </div>
         </div>
         <div class="p-3">
-          <h3 class="text-lg font-bold mb-2">Add Pay Period</h3>
+          <h3 class="text-lg font-bold mb-2">
+            {{ currentPayPeriod ? "Edit Pay Period" : "Add Pay Period" }}
+          </h3>
           <form
             class="flex flex-col gap-4 text-xs text-left wrap-normal"
             @submit.prevent="handleSubmit"

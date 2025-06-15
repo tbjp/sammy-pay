@@ -6,7 +6,12 @@ function randomInt(min, max) {
 
 function randomDateInRange(start, end) {
   const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
-  return date.toISOString().slice(0, 10)
+  return date
+}
+
+function randomTimeInRange(start, end) {
+  const time = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+  return time
 }
 
 export const useAppStore = defineStore('app', {
@@ -43,9 +48,9 @@ export const useAppStore = defineStore('app', {
         const payPeriod = {
           id: crypto.randomUUID(),
           user_id: this.user.id,
-          start_date: start.toISOString().slice(0, 10),
-          end_date: end.toISOString().slice(0, 10),
-          created_at: new Date().toISOString(),
+          start_date: start,
+          end_date: end,
+          created_at: new Date()
         }
 
         this.payPeriods.push(payPeriod)
@@ -54,12 +59,16 @@ export const useAppStore = defineStore('app', {
         const classCount = randomInt(3, 6)
         for (let j = 0; j < classCount; j++) {
           const classDate = randomDateInRange(start, end)
+          console.log(classDate)
+          const endTime = new Date(classDate.getTime() + 1000 * 60 * 60)
+          console.log(endTime)
 
           this.classes.push({
             id: crypto.randomUUID(),
             user_id: this.user.id,
             pay_period_id: payPeriod.id,
             class_date: classDate,
+            end_time: endTime,
             num_students: randomInt(4, 8),
             num_bonus_students: randomInt(0, 3),
             base_pay_per_class: 3000,
@@ -98,7 +107,9 @@ export const useAppStore = defineStore('app', {
     },
 
     // Class actions
-    addClass({ pay_period_id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student }) {
+    addClass({ pay_period_id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
+      console.log(class_date)
+      const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       const newClass = {
         id: crypto.randomUUID(),
         user_id: this.user.id,
@@ -108,12 +119,13 @@ export const useAppStore = defineStore('app', {
         num_bonus_students,
         base_pay_per_class,
         bonus_pay_per_student,
+        end_time: new Date(endTime),
         created_at: new Date().toISOString(),
       }
       this.classes.unshift(newClass)
     },
 
-    editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student }) {
+    editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
       const classItem = this.classes.find(cls => cls.id === id)
       if (!classItem) {
         console.error(`Class with id ${id} not found`)
@@ -124,6 +136,8 @@ export const useAppStore = defineStore('app', {
       classItem.num_bonus_students = num_bonus_students
       classItem.base_pay_per_class = base_pay_per_class
       classItem.bonus_pay_per_student = bonus_pay_per_student
+      const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
+      classItem.end_time = new Date(endTime)
     },
 
     deleteClass(id) {
