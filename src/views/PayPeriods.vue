@@ -1,24 +1,30 @@
 <script setup>
 import { useAppStore } from "../stores/store";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import Card from "../components/Card.vue";
 import SammyButton from "../components/SammyButton.vue";
 import PayPeriodModal from "../components/AddEditPayPeriod.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Heart from "../assets/images/heart.webp";
+import { storeToRefs } from "pinia";
 
 const appStore = useAppStore();
 const router = useRouter();
 
 const showModal = ref(false);
 
+const payPeriodData = storeToRefs(appStore.payPeriods);
+console.log("StoreToRefs: " + payPeriodData.value);
+
 function toggleModal() {
   console.log("Toggling modal");
-  console.log("Current showModal value:", showModal.value);
-  console.log("App store pay periods:", appStore.payPeriods);
   showModal.value = !showModal.value;
+}
+
+function seedData() {
+  appStore.seedData();
 }
 </script>
 
@@ -32,7 +38,7 @@ function toggleModal() {
           :src="ChevronRight"
           alt="Add"
           class="w-full h-full"
-          @click="appStore.seedData()"
+          @click="seedData()"
         />
       </SammyButton>
       <SammyButton class="w-5 h-5">

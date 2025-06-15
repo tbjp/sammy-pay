@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAppStore } from "../stores/store";
 import SammyButton from "../components/SammyButton.vue";
@@ -35,6 +35,11 @@ function toggleModal() {
 function onPayPeriodDeleted() {
   router.push({ path: "/pay-periods", query: { modal: "payPeriodDeleted" } });
 }
+
+watch(payPeriodData, () => {
+  console.log(payPeriodData.value);
+  console.log(appStore.calculatePayPeriod(payPeriodData.value));
+});
 </script>
 
 <template>

@@ -1,3 +1,5 @@
+// TODO: Fix date data types to be more consistent
+
 import { defineStore } from 'pinia'
 
 function randomInt(min, max) {
@@ -59,9 +61,7 @@ export const useAppStore = defineStore('app', {
         const classCount = randomInt(3, 6)
         for (let j = 0; j < classCount; j++) {
           const classDate = randomDateInRange(start, end)
-          console.log(classDate)
           const endTime = new Date(classDate.getTime() + 1000 * 60 * 60)
-          console.log(endTime)
 
           this.classes.push({
             id: crypto.randomUUID(),
@@ -108,7 +108,6 @@ export const useAppStore = defineStore('app', {
 
     // Class actions
     addClass({ pay_period_id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
-      console.log(class_date)
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       const newClass = {
         id: crypto.randomUUID(),
@@ -158,7 +157,9 @@ export const useAppStore = defineStore('app', {
       )
     },
     calculatePayPeriod(payPeriod) {
+      console.log(payPeriod)
       const classes = this.getClassesForPayPeriod(payPeriod)
+      console.log(classes)
       return classes.reduce((total, cls) => total + this.calculatePay(cls), 0)
     },
     // Get date formatted as "Wed MM/DD/YY"
