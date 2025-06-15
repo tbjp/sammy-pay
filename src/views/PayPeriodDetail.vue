@@ -33,7 +33,7 @@ function toggleModal() {
 }
 
 function onPayPeriodDeleted() {
-  router.push("/pay-periods");
+  router.push({ path: "/pay-periods", query: { modal: "payPeriodDeleted" } });
 }
 </script>
 

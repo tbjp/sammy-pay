@@ -1,5 +1,29 @@
 <script setup>
 import Nav from "./components/Nav.vue";
+import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import ConfirmationModal from "./components/ConfirmationModal.vue";
+
+const router = useRouter();
+const route = useRoute();
+
+const showConfirmationModal = ref(false);
+const confirmationMessage = ref("");
+
+watch(
+  () => route.query.modal,
+  (value) => {
+    if (value) {
+      confirmationMessage.value = value;
+      showConfirmationModal.value = true;
+    }
+  },
+);
+
+function toggleConfirmationModal() {
+  showConfirmationModal.value = !showConfirmationModal.value;
+  router.replace({ query: { modal: null } });
+}
 </script>
 
 <template>
@@ -12,6 +36,11 @@ import Nav from "./components/Nav.vue";
     </div>
     <Nav />
   </div>
+  <ConfirmationModal
+    :showConfirmationModal="showConfirmationModal"
+    :confirmationMessage="confirmationMessage"
+    @closeConfirmationModal="toggleConfirmationModal"
+  />
 </template>
 
 <style scoped></style>

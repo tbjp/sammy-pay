@@ -1,8 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useAppStore } from "../stores/store";
 import Exit from "../assets/images/icons/exit.png";
-import PixelButton from "./PixelButton.vue";
 
 const props = defineProps({
   showConfirmationModal: {
@@ -50,5 +47,8 @@ console.log(props.confirmationMessage);
         </p>
       </div>
     </div>
+    <form method="dialog" class="modal-backdrop">
+      <button @click="toggleModal()">close</button>
+    </form>
   </dialog>
 </template>

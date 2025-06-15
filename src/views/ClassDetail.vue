@@ -30,6 +30,10 @@ function toggleModal() {
 function onClassDeleted() {
   router.push({ path: "/", query: { modal: "classDeleted" } });
 }
+
+function onClassEdited() {
+  router.push({ path: route.path, query: { modal: "classEdited" } });
+}
 </script>
 
 <template>
@@ -76,6 +80,7 @@ function onClassDeleted() {
         :showModal="showModal"
         @closeModal="toggleModal()"
         @onClassDeleted="onClassDeleted()"
+        @onClassEdited="onClassEdited()"
         :currentClass="classData"
       />
     </div>

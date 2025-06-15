@@ -19,7 +19,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["closeModal", "onClassDeleted"]);
+const emit = defineEmits([
+  "closeModal",
+  "onClassDeleted",
+  "onClassEdited",
+  "onClassAdded",
+]);
 
 const appStore = useAppStore();
 
@@ -60,8 +65,10 @@ const handleSubmit = () => {
 
   if (props.currentClass) {
     appStore.editClass(newClass.value);
+    emit("onClassEdited");
   } else {
     appStore.addClass(newClass.value);
+    emit("onClassAdded");
   }
 
   // Reset form after successful submission
