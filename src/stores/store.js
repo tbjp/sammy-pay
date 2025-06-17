@@ -54,7 +54,7 @@ export const useAppStore = defineStore('app', {
           user_id: this.user.id,
           start_date: start.toISOString().split("T")[0],
           end_date: end.toISOString().split("T")[0],
-          created_at: new Date()
+          created_at: new Date().toISOString(),
         }
 
         this.payPeriods.push(payPeriod)
@@ -75,7 +75,7 @@ export const useAppStore = defineStore('app', {
             num_bonus_students: randomInt(0, 7),
             base_pay_per_class: randomInt(20, 101),
             bonus_pay_per_student: randomInt(1, 11),
-            created_at: new Date(),
+            created_at: new Date().toISOString(),
           })
         }
       }
@@ -138,7 +138,7 @@ export const useAppStore = defineStore('app', {
       classItem.base_pay_per_class = base_pay_per_class
       classItem.bonus_pay_per_student = bonus_pay_per_student
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
-      classItem.end_time = new Date(endTime)
+      classItem.end_time = new Date(endTime).toISOString()
     },
 
     deleteClass(id) {
@@ -204,6 +204,10 @@ export const useAppStore = defineStore('app', {
         hour: '2-digit',
         minute: '2-digit',
       })
+    },
+    toDatetime(dateString) {
+      const date = new Date(dateString)
+      return date.toISOString().slice(0, 16) // 'YYYY-MM-DDTHH:mm'
     },
   },
 

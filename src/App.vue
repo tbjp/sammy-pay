@@ -37,6 +37,7 @@ function toggleConfirmationModal() {
     <Nav />
   </div>
   <ConfirmationModal
+    v-if="showConfirmationModal"
     :showConfirmationModal="showConfirmationModal"
     :confirmationMessage="confirmationMessage"
     @closeConfirmationModal="toggleConfirmationModal"

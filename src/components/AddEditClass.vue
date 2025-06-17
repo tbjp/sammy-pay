@@ -7,6 +7,7 @@ import Happy from "../assets/images/icons/happy.png";
 import Calendar from "../assets/images/icons/calendar.png";
 import Money from "../assets/images/icons/money.png";
 import PixelButton from "./PixelButton.vue";
+import Oops from "../assets/images/cats/oops cat.jpg";
 
 const props = defineProps({
   showModal: {
@@ -117,6 +118,8 @@ watch(
   (isOpen) => {
     if (isOpen) {
       if (props.currentClass) {
+        console.log("Start time = " + props.currentClass.class_date);
+        console.log("End time = " + props.currentClass.end_time);
         newClass.value = { ...props.currentClass };
         const diff =
           Date.parse(props.currentClass.end_time) -
@@ -243,25 +246,30 @@ watch(
           </form>
 
           <div
-            class="absolute top-0 left-0 w-full h-full bg-bg-pink p-6 rounded flex flex-col justify-around gap-4"
+            class="absolute top-0 left-0 w-full h-full bg-white p-6 rounded flex flex-col justify-around gap-4"
             v-if="confirmationDialog"
           >
-            <h1 class="text-center text-2xl font-display-pixel">
-              Are you sure?
-            </h1>
-            <p class="text-center text-sm">
-              This class will be wiped from existence, banished from reality as
-              we know it, and you’ll never get to see it’s lovely little face,
-              its charming details, or its delightful pay rate ever again. Poof.
-              Gone. Forever. No goodbyes. No second chances. Just an empty void
-              where a beautiful class once lived. It’ll haunt your memories, or
-              maybe not. Either way, press delete with caution.
-            </p>
-            <div class="flex justify-center gap-10">
-              <PixelButton @click="deleteClass()">DELETE</PixelButton>
-              <PixelButton @click="toggleConfirmationDialog()"
-                >CANCEL</PixelButton
-              >
+            <div class="flex flex-col justify-center items-center max-h-full">
+              <h1 class="text-center text-lg font-display-pixel pb-2">
+                Are you sure?
+              </h1>
+              <p class="text-center text-sm overflow-auto text-truncate">
+                This class will be wiped from existence, banished from reality
+                as we know it, and you’ll never get to see it’s lovely little
+                face, its charming details, or its delightful pay rate ever
+                again. Poof. Gone. Forever. No goodbyes. No second chances. Just
+                an empty void where a beautiful class once lived. It’ll haunt
+                your memories, or maybe not. Either way, press delete with
+                caution.
+              </p>
+              <img :src="Oops" alt="Oops" class="w-24 h-24" />
+              <div class="flex justify-center">
+                <PixelButton @click="deleteClass()">DELETE</PixelButton>
+                <span class="flex-1 max-w-[2em] min-w-2"></span>
+                <PixelButton @click="toggleConfirmationDialog()"
+                  >CANCEL</PixelButton
+                >
+              </div>
             </div>
           </div>
         </div>

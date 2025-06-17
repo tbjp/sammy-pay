@@ -5,6 +5,7 @@ import Exit from "../assets/images/icons/exit.png";
 import PixelButton from "./PixelButton.vue";
 import Calendar from "../assets/images/icons/calendar.png";
 import Delete from "../assets/images/icons/delete.png";
+import Homeless from "../assets/images/cats/homeless cat.jpg";
 
 const props = defineProps({
   showModal: {
@@ -109,6 +110,12 @@ watch(
     }
   },
 );
+
+const confirmationDialog = ref(false);
+
+function toggleConfirmationDialog() {
+  confirmationDialog.value = !confirmationDialog.value;
+}
 </script>
 
 <template>
@@ -122,7 +129,7 @@ watch(
             <img :src="Exit" alt="Close" class="w-full h-full" />
           </div>
         </div>
-        <div class="p-3">
+        <div class="p-4 relative">
           <h3 class="text-lg font-display-pixel my-4">
             {{ currentPayPeriod ? "Edit Pay Period" : "Add Pay Period" }}
           </h3>
@@ -134,6 +141,7 @@ watch(
               <span class="w-10 h-6">
                 <img :src="Calendar" alt="Calendar" class="w-6 h-6" />
               </span>
+              <!-- yyyy-MM-ddThh:mm -->
               <input
                 type="date"
                 class="sammy-input"
@@ -158,11 +166,33 @@ watch(
             </p>
             <div class="flex justify-center gap-10">
               <PixelButton>{{ currentPayPeriod ? "EDIT" : "ADD" }}</PixelButton>
-              <button @click="deletePayPeriod()" v-if="currentPayPeriod">
+              <div @click="toggleConfirmationDialog()" v-if="currentPayPeriod">
                 <img :src="Delete" alt="Delete" class="w-8 h-8" />
-              </button>
+              </div>
             </div>
           </form>
+          <div
+            class="absolute top-0 left-0 w-full h-full bg-white p-6 rounded flex flex-col justify-around gap-4"
+            v-if="confirmationDialog"
+          >
+            <div class="flex flex-col justify-center items-center max-h-full">
+              <h1 class="text-center text-lg font-display-pixel pb-2">
+                Are you sure?
+              </h1>
+              <p class="text-center text-sm overflow-auto text-truncate">
+                Just look at him, confused, clutching his last paycheck in the
+                rain. Take responsibility. He believed in you.
+              </p>
+              <img :src="Homeless" alt="Homeless cat" class="w-24 h-24" />
+              <div class="flex justify-center">
+                <PixelButton @click="deletePayPeriod()">DELETE</PixelButton>
+                <span class="flex-1 max-w-[2em] min-w-2"></span>
+                <PixelButton @click="toggleConfirmationDialog()"
+                  >CANCEL</PixelButton
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
