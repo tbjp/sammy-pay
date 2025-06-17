@@ -18,7 +18,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["closeModal", "onPayPeriodDeleted"]);
+const emit = defineEmits([
+  "closeModal",
+  "onPayPeriodDeleted",
+  "onPayPeriodEdited",
+  "onPayPeriodAdded",
+]);
 
 const appStore = useAppStore();
 
@@ -50,8 +55,10 @@ const handleSubmit = () => {
   }
   if (props.currentPayPeriod) {
     appStore.editPayPeriod(newPayPeriod.value);
+    emit("onPayPeriodEdited");
   } else {
     appStore.addPayPeriod(newPayPeriod.value);
+    emit("onPayPeriodAdded");
   }
 
   // Reset form after successful submission

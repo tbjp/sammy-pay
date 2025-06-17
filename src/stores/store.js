@@ -11,11 +11,6 @@ function randomDateInRange(start, end) {
   return date
 }
 
-function randomTimeInRange(start, end) {
-  const time = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
-  return time
-}
-
 export const useAppStore = defineStore('app', {
   state: () => ({
     user: {
@@ -50,8 +45,8 @@ export const useAppStore = defineStore('app', {
         const payPeriod = {
           id: crypto.randomUUID(),
           user_id: this.user.id,
-          start_date: start,
-          end_date: end,
+          start_date: start.toISOString().split("T")[0],
+          end_date: end.toISOString().split("T")[0],
           created_at: new Date()
         }
 
@@ -67,13 +62,13 @@ export const useAppStore = defineStore('app', {
             id: crypto.randomUUID(),
             user_id: this.user.id,
             pay_period_id: payPeriod.id,
-            class_date: classDate,
-            end_time: endTime,
+            class_date: classDate.toISOString().split("T")[0],
+            end_time: endTime.toISOString().split("T")[0],
             num_students: randomInt(4, 8),
             num_bonus_students: randomInt(0, 3),
             base_pay_per_class: 3000,
             bonus_pay_per_student: 500,
-            created_at: new Date().toISOString(),
+            created_at: new Date(),
           })
         }
       }
@@ -113,12 +108,12 @@ export const useAppStore = defineStore('app', {
         id: crypto.randomUUID(),
         user_id: this.user.id,
         pay_period_id,
-        class_date,
+        class_date: class_date,
         num_students,
         num_bonus_students,
         base_pay_per_class,
         bonus_pay_per_student,
-        end_time: new Date(endTime),
+        end_time: new Date(endTime).toISOString(),
         created_at: new Date().toISOString(),
       }
       this.classes.unshift(newClass)
@@ -157,8 +152,10 @@ export const useAppStore = defineStore('app', {
       )
     },
     calculatePayPeriod(payPeriod) {
+      console.log("Calculating pay period: ")
       console.log(payPeriod)
       const classes = this.getClassesForPayPeriod(payPeriod)
+      console.log("Classes: ")
       console.log(classes)
       return classes.reduce((total, cls) => total + this.calculatePay(cls), 0)
     },

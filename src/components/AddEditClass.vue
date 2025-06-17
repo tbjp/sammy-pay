@@ -64,6 +64,8 @@ const handleSubmit = () => {
   }
 
   if (props.currentClass) {
+    console.log("Editing class start time: " + newClass.value.start_time);
+    console.log("Editing class end time: " + newClass.value.end_time);
     appStore.editClass(newClass.value);
     emit("onClassEdited");
   } else {

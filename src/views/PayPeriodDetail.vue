@@ -36,6 +36,10 @@ function onPayPeriodDeleted() {
   router.push({ path: "/pay-periods", query: { modal: "payPeriodDeleted" } });
 }
 
+function onPayPeriodEdited() {
+  router.push({ path: route.path, query: { modal: "payPeriodEdited" } });
+}
+
 watch(payPeriodData, () => {
   console.log(payPeriodData.value);
   console.log(appStore.calculatePayPeriod(payPeriodData.value));
@@ -113,6 +117,7 @@ watch(payPeriodData, () => {
       :showModal="showModal"
       @closeModal="toggleModal()"
       @onPayPeriodDeleted="onPayPeriodDeleted()"
+      @onPayPeriodEdited="onPayPeriodEdited()"
       :currentPayPeriod="payPeriodData"
     />
   </div>
