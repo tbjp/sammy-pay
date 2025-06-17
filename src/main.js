@@ -16,3 +16,17 @@ app.mount('#app')
 
 const appStore = useAppStore()
 window.appStore = appStore
+
+let timeout
+window.addEventListener('storage', (event) => {
+  console.log("Storage event: ")
+  console.log(event)
+  if (event.key === 'app') {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      const store = useAppStore()
+      const newState = JSON.parse(event.newValue)
+      if (newState) store.$patch(newState)
+    }, 100)
+  }
+})
