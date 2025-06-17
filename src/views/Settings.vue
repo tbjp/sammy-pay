@@ -1,9 +1,11 @@
 <script setup>
 import { useAppStore } from "../stores/store";
 import SammyButton from "../components/SammyButton.vue";
+import PixelButton from "../components/PixelButton.vue";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
 import { useRouter } from "vue-router";
+import exportCSV from "../utilities/export";
 
 const appStore = useAppStore();
 const router = useRouter();
@@ -19,8 +21,8 @@ function doStuff() {
     <img :src="Star" alt="Star" class="w-32 min-h-28" />
     <h2 class="font-display-pixel text-sm text-left w-full">Settings</h2>
     <p>Settings content coming soon...</p>
-    Click here to create some sample data or OBLITERATE IT! 💣💥 Yes, this will
-    destroy all your data. You have been warned.
+    Click on the tiny pink button to create some sample data or OBLITERATE IT!
+    💣💥 Yes, this will destroy all your data. You have been warned.
     <SammyButton class="w-5 h-5">
       <img
         :src="ChevronRight"
@@ -29,6 +31,13 @@ function doStuff() {
         @click="doStuff()"
       />
     </SammyButton>
+
+    <h3 class="font-display-pixel text-sm text-left w-full">Export classes</h3>
+    <PixelButton class="" @click="exportCSV('classes')">Export</PixelButton>
+    <h3 class="font-display-pixel text-sm text-left w-full">
+      Export pay periods
+    </h3>
+    <PixelButton class="" @click="exportCSV('payPeriods')">Export</PixelButton>
   </div>
 </template>
 

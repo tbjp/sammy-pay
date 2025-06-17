@@ -69,12 +69,12 @@ export const useAppStore = defineStore('app', {
             id: crypto.randomUUID(),
             user_id: this.user.id,
             pay_period_id: payPeriod.id,
-            class_date: classDate.toISOString().split("T")[0],
-            end_time: endTime.toISOString().split("T")[0],
-            num_students: randomInt(4, 8),
-            num_bonus_students: randomInt(0, 3),
-            base_pay_per_class: 3000,
-            bonus_pay_per_student: 500,
+            class_date: classDate.toISOString(),
+            end_time: endTime.toISOString(),
+            num_students: randomInt(4, 12),
+            num_bonus_students: randomInt(0, 7),
+            base_pay_per_class: randomInt(20, 101),
+            bonus_pay_per_student: randomInt(1, 11),
             created_at: new Date(),
           })
         }
