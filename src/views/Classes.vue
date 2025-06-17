@@ -30,14 +30,6 @@ function onClassAdded() {
       <h2 class="font-display-pixel text-sm text-left">Classes</h2>
       <SammyButton class="w-5 h-5">
         <img
-          :src="ChevronRight"
-          alt="Add"
-          class="w-full h-full"
-          @click="appStore.seedData()"
-        />
-      </SammyButton>
-      <SammyButton class="w-5 h-5">
-        <img
           :src="Add"
           alt="Add"
           class="w-full h-full"
@@ -46,14 +38,14 @@ function onClassAdded() {
       </SammyButton>
     </div>
     <ul class="flex flex-col gap-4 w-full">
-      <Card v-for="cls in appStore.classes" :key="cls.id" :hearts="true">
+      <Card v-for="cls in appStore.sortedClasses" :key="cls.id" :hearts="true">
         <div class="flex justify-between w-full">
           <div class="flex flex-col gap-1 text-left">
             <h3 class="font-display-pixel text-sm">
               {{ appStore.getFormattedDate(cls.class_date) }}
             </h3>
             <p>{{ cls.num_students }} students</p>
-            <p>${{ cls.base_pay_per_class }} earned</p>
+            <p>${{ appStore.calculatePay(cls) }} earned</p>
           </div>
           <div class="flex items-end">
             <SammyButton

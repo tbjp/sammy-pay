@@ -1,4 +1,3 @@
-<!-- TODO Add confirmation dialog and route query for alerts -->
 <script setup>
 import { ref, watch } from "vue";
 import { useAppStore } from "../stores/store";

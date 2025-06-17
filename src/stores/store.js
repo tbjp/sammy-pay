@@ -1,5 +1,3 @@
-// TODO: Fix date data types to be more consistent
-
 import { defineStore } from 'pinia'
 
 function randomInt(min, max) {
@@ -21,6 +19,15 @@ export const useAppStore = defineStore('app', {
     classes: [],
     dataSeeded: false,
   }),
+
+  getters: {
+    sortedClasses(state) {
+      return [...state.classes].sort((b, a) => a.class_date.localeCompare(b.class_date));
+    },
+    sortedPayPeriods(state) {
+      return [...state.payPeriods].sort((b, a) => a.start_date.localeCompare(b.start_date));
+    },
+  },
 
   actions: {
     // User actions
