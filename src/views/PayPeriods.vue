@@ -8,6 +8,7 @@ import PayPeriodModal from "../components/AddEditPayPeriod.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Heart from "../assets/images/heart.webp";
+import PixelButton from "../components/PixelButton.vue";
 
 const appStore = useAppStore();
 const router = useRouter();
@@ -16,6 +17,14 @@ const showModal = ref(false);
 
 function toggleModal() {
   showModal.value = !showModal.value;
+}
+
+const listLength = ref(20);
+function loadMore() {
+  listLength.value += 20;
+  if (listLength.value > appStore.sortedPayPeriods.length) {
+    listLength.value = appStore.sortedPayPeriods.length;
+  }
 }
 </script>
 
@@ -34,7 +43,11 @@ function toggleModal() {
       </SammyButton>
     </div>
     <ul class="flex flex-col gap-4 w-full">
-      <Card v-for="pp in appStore.sortedPayPeriods" :key="pp.id" :hearts="true">
+      <Card
+        v-for="pp in appStore.sortedPayPeriods.slice(0, listLength)"
+        :key="pp.id"
+        :hearts="true"
+      >
         <div class="flex justify-between w-full">
           <div class="flex flex-col gap-1 text-left">
             <h3 class="font-display-pixel text-sm">
@@ -58,6 +71,12 @@ function toggleModal() {
           </div>
         </div>
       </Card>
+      <div
+        v-if="appStore.sortedPayPeriods.length > listLength"
+        @scroll="loadMore()"
+      >
+        <PixelButton @click="loadMore()">MORE!</PixelButton>
+      </div>
     </ul>
     <PayPeriodModal :showModal="showModal" @closeModal="toggleModal()" />
   </div>

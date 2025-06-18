@@ -5,6 +5,8 @@ import router from './router'
 import { createPinia } from 'pinia'
 import piniaPersistedState from 'pinia-plugin-persistedstate'
 import { useAppStore } from './stores/store'
+import { supabase } from './lib/supabaseClient'
+import { startSyncLoop } from './utilities/syncLoop'
 
 const pinia = createPinia()
 pinia.use(piniaPersistedState)
@@ -16,6 +18,28 @@ app.mount('#app')
 
 const appStore = useAppStore()
 window.appStore = appStore
+
+await appStore.fetchUser()
+
+// Restore session on reload
+// supabase.auth.getSession().then(({ data: { session } }) => {
+//   if (session?.user) {
+//     appStore.setUser(session.user)
+//   }
+// })
+
+// supabase.auth.onAuthStateChange((_event, session) => {
+//   const store = useAppStore()
+//   if (session?.user) {
+//     store.setUser(session.user)
+//   } else {
+//     store.setUser(null)
+//   }
+// })
+
+supabase.auth.onAuthStateChange(() => {
+  appStore.fetchUser()
+})
 
 let timeout
 window.addEventListener('storage', (event) => {
@@ -30,3 +54,5 @@ window.addEventListener('storage', (event) => {
     }, 100)
   }
 })
+
+startSyncLoop(appStore)

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { supabase } from '../lib/supabaseClient'
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -11,18 +12,21 @@ function randomDateInRange(start, end) {
 
 export const useAppStore = defineStore('app', {
   state: () => ({
-    user: {
-      id: null,
-      email: null,
-    },
+    user: null,
     payPeriods: [],
     classes: [],
     dataSeeded: false,
+    lastSyncedAt: null,
+    needsSync: false,
   }),
 
   getters: {
+    getUndeletedClasses(state) {
+      return state.classes.filter(cls => !cls._deleted)
+    },
+
     sortedClasses(state) {
-      return [...state.classes].sort((b, a) => a.class_date.localeCompare(b.class_date));
+      return [...state.getUndeletedClasses].sort((b, a) => a.class_date.localeCompare(b.class_date));
     },
     sortedPayPeriods(state) {
       return [...state.payPeriods].sort((b, a) => a.start_date.localeCompare(b.start_date));
@@ -30,10 +34,44 @@ export const useAppStore = defineStore('app', {
   },
 
   actions: {
-    // User actions
-    setUser(id, email) {
-      this.user = { id, email }
+    async fetchUser() {
+      const { data, error } = await supabase.auth.getUser()
+      if (data?.user) {
+        this.user = data.user
+        console.log(this.user)
+      } else {
+        this.user = null
+      }
     },
+    setUser(user) {
+      this.user = user
+    },
+    logout() {
+      supabase.auth.signOut()
+      this.user = null
+    },
+
+    mergeRecords(local, remote) {
+      const merged = [];
+
+      for (const remoteItem of remote) {
+        const localItem = local.find(l => l.id === remoteItem.id);
+        if (!localItem) {
+          console.log("New remote record: ", remoteItem)
+          merged.push(remoteItem); // new remote record
+        } else if (new Date(remoteItem.updated_at) > new Date(localItem.updated_at)) {
+          console.log("Remote is newer: ", remoteItem)
+          merged.push(remoteItem); // remote is newer
+        } else {
+          merged.push(localItem); // keep local
+        }
+      }
+
+      // Add local-only items
+      const localOnly = local.filter(l => !remote.find(r => r.id === l.id));
+      return [...merged, ...localOnly];
+    },
+
     seedData() {
       if (this.dataSeeded) {
         this.payPeriods = []
@@ -45,7 +83,7 @@ export const useAppStore = defineStore('app', {
       const today = new Date()
       const msInDay = 24 * 60 * 60 * 1000
 
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 30; i++) {
         const end = new Date(today.getTime() - i * 14 * msInDay)
         const start = new Date(end.getTime() - 13 * msInDay)
 
@@ -55,6 +93,8 @@ export const useAppStore = defineStore('app', {
           start_date: start.toISOString().split("T")[0],
           end_date: end.toISOString().split("T")[0],
           created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          needsSync: true,
         }
 
         this.payPeriods.push(payPeriod)
@@ -68,7 +108,6 @@ export const useAppStore = defineStore('app', {
           this.classes.push({
             id: crypto.randomUUID(),
             user_id: this.user.id,
-            pay_period_id: payPeriod.id,
             class_date: classDate.toISOString(),
             end_time: endTime.toISOString(),
             num_students: randomInt(4, 12),
@@ -76,6 +115,8 @@ export const useAppStore = defineStore('app', {
             base_pay_per_class: randomInt(20, 101),
             bonus_pay_per_student: randomInt(1, 11),
             created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            needsSync: true,
           })
         }
       }
@@ -90,6 +131,8 @@ export const useAppStore = defineStore('app', {
         start_date: start_date,
         end_date: end_date,
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        needsSync: true,
       }
       this.payPeriods.unshift(newPeriod)
     },
@@ -102,19 +145,41 @@ export const useAppStore = defineStore('app', {
       }
       periodItem.start_date = start_date
       periodItem.end_date = end_date
+      periodItem.updated_at = new Date().toISOString()
+      periodItem.needsSync = true
     },
 
     deletePayPeriod(id) {
-      this.payPeriods = this.payPeriods.filter(period => period.id !== id)
+      // Set _deleted to true
+      this.payPeriods = this.payPeriods.map(pp => {
+        if (pp.id === id) {
+          pp._deleted = true
+          pp.needsSync = true
+        }
+        return pp
+      })
+    },
+
+    deleteSyncedPayPeriods(payPeriods) {
+      this.payPeriods = this.payPeriods.filter(pp => !payPeriods.some(pp => pp.id === pp.id))
+    },
+
+    setSyncedPayPeriods(syncedPayPeriods) {
+      this.payPeriods = this.payPeriods.map(pp => {
+        if (syncedPayPeriods.some(syncedPP => syncedPP.id === pp.id)) {
+          console.log("Setting needsSync to false for pay period: ", pp.id)
+          pp.needsSync = false
+        }
+        return pp
+      })
     },
 
     // Class actions
-    addClass({ pay_period_id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
+    addClass({ class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       const newClass = {
         id: crypto.randomUUID(),
         user_id: this.user.id,
-        pay_period_id,
         class_date: class_date,
         num_students,
         num_bonus_students,
@@ -122,6 +187,8 @@ export const useAppStore = defineStore('app', {
         bonus_pay_per_student,
         end_time: new Date(endTime).toISOString(),
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        needsSync: true,
       }
       this.classes.unshift(newClass)
     },
@@ -139,17 +206,40 @@ export const useAppStore = defineStore('app', {
       classItem.bonus_pay_per_student = bonus_pay_per_student
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       classItem.end_time = new Date(endTime).toISOString()
+      classItem.updated_at = new Date().toISOString()
+      classItem.needsSync = true
     },
 
     deleteClass(id) {
-      this.classes = this.classes.filter(cls => cls.id !== id)
+      // Set _deleted to true
+      this.classes = this.classes.map(cls => {
+        if (cls.id === id) {
+          cls._deleted = true
+          cls.needsSync = true
+        }
+        return cls
+      })
+    },
+
+    deleteSyncedClasses(classes) {
+      this.classes = this.classes.filter(cls => !classes.some(c => c.id === cls.id))
+    },
+
+    setSyncedClasses(syncedClasses) {
+      this.classes = this.classes.map(cls => {
+        if (syncedClasses.some(syncedCls => syncedCls.id === cls.id)) {
+          console.log("Setting needsSync to false for class: ", cls.id)
+          cls.needsSync = false
+        }
+        return cls
+      })
     },
 
     getClassesForPayPeriod({start_date, end_date}) {
       const endDatePlusOne = new Date(end_date)
       endDatePlusOne.setDate(endDatePlusOne.getDate() + 1)
       const endDateISOString = endDatePlusOne.toISOString().split("T")[0]
-      return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= endDateISOString)
+      return this.classes.filter(cls => cls.class_date >= start_date && cls.class_date <= endDateISOString && !cls._deleted)
     },
 
     calculatePay(classItem) {
@@ -159,11 +249,7 @@ export const useAppStore = defineStore('app', {
       )
     },
     calculatePayPeriod(payPeriod) {
-      console.log("Calculating pay period: ")
-      console.log(payPeriod)
       const classes = this.getClassesForPayPeriod(payPeriod)
-      console.log("Classes: ")
-      console.log(classes)
       return classes.reduce((total, cls) => total + this.calculatePay(cls), 0)
     },
     // Get date formatted as "Wed MM/DD/YY"

@@ -8,6 +8,7 @@ import ClassModal from "../components/AddEditClass.vue";
 import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
+import PixelButton from "../components/PixelButton.vue";
 
 const appStore = useAppStore();
 const router = useRouter();
@@ -20,6 +21,13 @@ function toggleModal() {
 
 function onClassAdded() {
   router.push({ path: "/", query: { modal: "classAdded" } });
+}
+const listLength = ref(20);
+function loadMore() {
+  listLength.value += 20;
+  if (listLength.value > appStore.sortedClasses.length) {
+    listLength.value = appStore.sortedClasses.length;
+  }
 }
 </script>
 
@@ -38,7 +46,11 @@ function onClassAdded() {
       </SammyButton>
     </div>
     <ul class="flex flex-col gap-4 w-full">
-      <Card v-for="cls in appStore.sortedClasses" :key="cls.id" :hearts="true">
+      <Card
+        v-for="cls in appStore.sortedClasses.slice(0, listLength)"
+        :key="cls.id"
+        :hearts="true"
+      >
         <div class="flex justify-between w-full">
           <div class="flex flex-col gap-1 text-left">
             <h3 class="font-display-pixel text-sm">
@@ -61,6 +73,12 @@ function onClassAdded() {
           </div>
         </div>
       </Card>
+      <div
+        v-if="appStore.sortedClasses.length > listLength"
+        @scroll="loadMore()"
+      >
+        <PixelButton @click="loadMore()">MORE!</PixelButton>
+      </div>
     </ul>
     <ClassModal
       :showModal="showModal"
