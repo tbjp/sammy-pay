@@ -37,8 +37,8 @@ const handleSubmit = () => {
   const validationRules = [
     {
       field: "start_date",
-      min: 1,
-      message: "Start date must be at least 1",
+      min: "0001-01-01",
+      message: "Start date must be at least 0001-01-01",
     },
     {
       field: "end_date",

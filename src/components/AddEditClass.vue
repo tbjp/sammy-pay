@@ -46,6 +46,12 @@ const handleSubmit = () => {
       message: "Number of bonus students must be at least 0",
     },
     {
+      field: "num_bonus_students",
+      max: newClass.value.num_students,
+      message:
+        "Number of bonus students must be less than or equal to total students",
+    },
+    {
       field: "base_pay_per_class",
       min: 0,
       message: "Base pay per class must be at least 0",
@@ -58,7 +64,10 @@ const handleSubmit = () => {
   ];
 
   for (const rule of validationRules) {
-    if (newClass.value[rule.field] < rule.min) {
+    if (
+      newClass.value[rule.field] < rule.min ||
+      newClass.value[rule.field] > rule.max
+    ) {
       alert(rule.message);
       return;
     }
