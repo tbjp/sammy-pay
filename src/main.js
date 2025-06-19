@@ -19,7 +19,7 @@ app.mount('#app')
 const appStore = useAppStore()
 window.appStore = appStore
 
-await appStore.fetchUser()
+appStore.fetchUser()
 
 // Restore session on reload
 // supabase.auth.getSession().then(({ data: { session } }) => {

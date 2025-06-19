@@ -135,6 +135,7 @@ export const useAppStore = defineStore('app', {
         needsSync: true,
       }
       this.payPeriods.unshift(newPeriod)
+      this.needsSync = true
     },
 
     editPayPeriod({ id, start_date, end_date }) {
@@ -147,6 +148,7 @@ export const useAppStore = defineStore('app', {
       periodItem.end_date = end_date
       periodItem.updated_at = new Date().toISOString()
       periodItem.needsSync = true
+      this.needsSync = true
     },
 
     deletePayPeriod(id) {
@@ -158,6 +160,7 @@ export const useAppStore = defineStore('app', {
         }
         return pp
       })
+      this.needsSync = true
     },
 
     deleteSyncedPayPeriods(payPeriods) {
@@ -191,6 +194,7 @@ export const useAppStore = defineStore('app', {
         needsSync: true,
       }
       this.classes.unshift(newClass)
+      this.needsSync = true
     },
 
     editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
@@ -208,6 +212,7 @@ export const useAppStore = defineStore('app', {
       classItem.end_time = new Date(endTime).toISOString()
       classItem.updated_at = new Date().toISOString()
       classItem.needsSync = true
+      this.needsSync = true
     },
 
     deleteClass(id) {
@@ -219,6 +224,7 @@ export const useAppStore = defineStore('app', {
         }
         return cls
       })
+      this.needsSync = true
     },
 
     deleteSyncedClasses(classes) {

@@ -26,18 +26,15 @@ watch(
 
 // TODO: Subscribe to changes in classes or pay periods from pinia
 // This isnt really working properly
-appStore.$subscribe((mutation, state) => {
-  console.log("Mutation: ", mutation);
-  console.log("State: ", state);
-  if (
-    mutation.type === "update" &&
-    (mutation.payload.path.includes("payPeriods") ||
-      mutation.payload.path.includes("classes"))
-  ) {
-    appStore.needsSync = true;
-    console.log("NEEDS SYNC: " + appStore.needsSync);
-  }
-});
+// watch(
+//   () => [appStore.classes, appStore.payPeriods],
+//   () => {
+//     console.log("Some class or pay period was added or changed");
+//     appStore.needsSync = true;
+//     console.log("NEEDS SYNC: " + appStore.needsSync);
+//   },
+//   { deep: true },
+// );
 
 function toggleConfirmationModal() {
   showConfirmationModal.value = !showConfirmationModal.value;
