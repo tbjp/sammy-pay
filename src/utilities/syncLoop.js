@@ -32,7 +32,7 @@ async function onetimeSync(appStore) {
     console.log("Last synced at: ")
     console.log("DB: " + lastSyncedAtDB.last_synced)
     console.log("App: " + appStore.lastSyncedAt)
-    if (lastSyncedAtDB.last_synced <= appStore.lastSyncedAt && !appStore.needsSync) {
+    if (lastSyncedAtDB.last_synced === appStore.lastSyncedAt && !appStore.needsSync) {
       console.log("Needs sync: " + appStore.needsSync)
       return }
 

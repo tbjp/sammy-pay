@@ -155,6 +155,7 @@ export const useAppStore = defineStore('app', {
       // Set _deleted to true
       this.payPeriods = this.payPeriods.map(pp => {
         if (pp.id === id) {
+          pp.updated_at = new Date().toISOString()
           pp._deleted = true
           pp.needsSync = true
         }
@@ -219,6 +220,7 @@ export const useAppStore = defineStore('app', {
       // Set _deleted to true
       this.classes = this.classes.map(cls => {
         if (cls.id === id) {
+          cls.updated_at = new Date().toISOString()
           cls._deleted = true
           cls.needsSync = true
         }
