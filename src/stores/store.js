@@ -17,7 +17,6 @@ export const useAppStore = defineStore('app', {
     payPeriods: [],
     classes: [],
     dataSeeded: false,
-    lastSyncedAt: null,
   }),
 
   getters: {
@@ -54,6 +53,8 @@ export const useAppStore = defineStore('app', {
     logout() {
       supabase.auth.signOut()
       this.user = null
+      this.payPeriods = []
+      this.classes = []
     },
 
     seedData() {

@@ -1,3 +1,5 @@
+<!-- TODO: Delete database option with online -->
+
 <script setup>
 import { useAppStore } from "../stores/store";
 import SammyButton from "../components/SammyButton.vue";
@@ -13,6 +15,11 @@ const router = useRouter();
 function doStuff() {
   appStore.seedData();
   router.push("/");
+}
+
+function logOut() {
+  appStore.logout();
+  router.push("/login");
 }
 </script>
 
@@ -33,11 +40,14 @@ function doStuff() {
     </SammyButton>
 
     <h3 class="font-display-pixel text-sm text-left w-full">Export classes</h3>
-    <PixelButton class="" @click="exportCSV('classes')">Export</PixelButton>
+    <PixelButton @click="exportCSV('classes')">Export</PixelButton>
     <h3 class="font-display-pixel text-sm text-left w-full">
       Export pay periods
     </h3>
-    <PixelButton class="" @click="exportCSV('payPeriods')">Export</PixelButton>
+    <PixelButton @click="exportCSV('payPeriods')">Export</PixelButton>
+
+    <PixelButton v-if="appStore.user" @click="logOut()">Log out</PixelButton>
+    <PixelButton v-else @click="router.push('/login')">Log in</PixelButton>
   </div>
 </template>
 

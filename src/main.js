@@ -51,7 +51,7 @@ window.addEventListener('storage', (event) => {
       const store = useAppStore()
       const newState = JSON.parse(event.newValue)
       if (newState) store.$patch(newState)
-    }, 100)
+    }, 300)
   }
 })
 
