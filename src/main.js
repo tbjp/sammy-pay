@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import piniaPersistedState from 'pinia-plugin-persistedstate'
 import { useAppStore } from './stores/store'
 import { supabase } from './lib/supabaseClient'
-import { startSyncLoop } from './utilities/syncLoop'
+import { startSyncLoop } from './utilities/sync'
 
 const pinia = createPinia()
 pinia.use(piniaPersistedState)
@@ -55,4 +55,4 @@ window.addEventListener('storage', (event) => {
   }
 })
 
-// startSyncLoop(appStore)
+startSyncLoop()

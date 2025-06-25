@@ -1,6 +1,30 @@
 import { supabase } from "../lib/supabaseClient";
 import { useAppStore } from "../stores/store";
 
+let syncInterval
+
+export function startSyncLoop() {
+  syncInterval = setInterval(async () => {
+    debouncedSync()
+  }, 60000) // every minute
+}
+
+export function stopSyncLoop() {
+  clearInterval(syncInterval)
+}
+
+// debounced sync
+let syncTimeout
+
+export function debouncedSync() {
+  if (syncTimeout) {
+    clearTimeout(syncTimeout)
+  }
+  syncTimeout = setTimeout(() => {
+    sync()
+  }, 1000)
+}
+
 export async function sync() {
   const appStore = useAppStore()
   if (!navigator.onLine || !appStore.user) return

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { supabase } from '../lib/supabaseClient'
+import { debouncedSync } from '../utilities/sync'
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -53,27 +54,6 @@ export const useAppStore = defineStore('app', {
     logout() {
       supabase.auth.signOut()
       this.user = null
-    },
-
-    mergeRecords(local, remote) {
-      const merged = [];
-
-      for (const remoteItem of remote) {
-        const localItem = local.find(l => l.id === remoteItem.id);
-        if (!localItem) {
-          console.log("New remote record: ", remoteItem)
-          merged.push(remoteItem); // new remote record
-        } else if (new Date(remoteItem.updated_at) > new Date(localItem.updated_at)) {
-          console.log("Remote is newer: ", remoteItem)
-          merged.push(remoteItem); // remote is newer
-        } else {
-          merged.push(localItem); // keep local
-        }
-      }
-
-      // Add local-only items
-      const localOnly = local.filter(l => !remote.find(r => r.id === l.id));
-      return [...merged, ...localOnly];
     },
 
     seedData() {
@@ -136,6 +116,7 @@ export const useAppStore = defineStore('app', {
         updated_at: new Date().toISOString(),
       }
       this.payPeriods.unshift(newPeriod)
+      debouncedSync()
     },
 
     editPayPeriod({ id, start_date, end_date }) {
@@ -147,6 +128,7 @@ export const useAppStore = defineStore('app', {
       periodItem.start_date = start_date
       periodItem.end_date = end_date
       periodItem.updated_at = new Date().toISOString()
+      debouncedSync()
     },
 
     deletePayPeriod(id) {
@@ -158,10 +140,7 @@ export const useAppStore = defineStore('app', {
         }
         return pp
       })
-    },
-
-    deleteSyncedPayPeriods(payPeriods) {
-      this.payPeriods = this.payPeriods.filter(pp => !payPeriods.some(pp => pp.id === pp.id))
+      debouncedSync()
     },
 
     // Class actions
@@ -180,6 +159,7 @@ export const useAppStore = defineStore('app', {
         updated_at: new Date().toISOString(),
       }
       this.classes.unshift(newClass)
+      debouncedSync()
     },
 
     editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
@@ -196,6 +176,7 @@ export const useAppStore = defineStore('app', {
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       classItem.end_time = new Date(endTime).toISOString()
       classItem.updated_at = new Date().toISOString()
+      debouncedSync()
     },
 
     deleteClass(id) {
@@ -207,6 +188,7 @@ export const useAppStore = defineStore('app', {
         }
         return cls
       })
+      debouncedSync()
     },
 
     getClassesForPayPeriod({start_date, end_date}) {

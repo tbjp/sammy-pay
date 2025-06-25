@@ -1,4 +1,4 @@
-// TODO: Handle deleted records from other sessions
+// TODO: Delete this file
 import { supabase } from "../lib/supabaseClient";
 
 let syncInterval
