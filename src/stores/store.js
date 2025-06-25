@@ -13,7 +13,7 @@ function randomDateInRange(start, end) {
 
 export const useAppStore = defineStore('app', {
   state: () => ({
-    user: null,
+    user: "none",
     payPeriods: [],
     classes: [],
     dataSeeded: false,
@@ -43,16 +43,21 @@ export const useAppStore = defineStore('app', {
       if (data?.user) {
         this.user = data.user
         console.log(this.user)
+        this.payPeriods = this.payPeriods.map(pp => ({ ...pp, user_id: this.user.id }))
+        this.classes = this.classes.map(cls => ({ ...cls, user_id: this.user.id }))
+        debouncedSync()
       } else {
-        this.user = null
+        this.user = "none"
       }
     },
+
     setUser(user) {
       this.user = user
     },
+
     logout() {
       supabase.auth.signOut()
-      this.user = null
+      this.user = "none"
       this.payPeriods = []
       this.classes = []
     },

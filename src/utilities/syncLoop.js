@@ -27,7 +27,7 @@ async function setLastSyncedTime(appStore, ISODateString) {
 }
 
 async function onetimeSync(appStore) {
-    if (!navigator.onLine || !appStore.user) return
+    if (!navigator.onLine || appStore.user === "none") return
 
 
     const { data: lastSyncedAtDB, error } = await supabase.from('last_synced').select('*').eq('id', appStore.user.id).single()

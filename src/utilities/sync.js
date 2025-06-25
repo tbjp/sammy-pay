@@ -27,7 +27,7 @@ export function debouncedSync() {
 
 export async function sync() {
   const appStore = useAppStore()
-  if (!navigator.onLine || !appStore.user) return
+  if (!navigator.onLine || appStore.user === "none") return
 
   await syncTable("classes", appStore)
   await syncTable("pay_periods", appStore)

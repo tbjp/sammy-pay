@@ -9,6 +9,7 @@ import Add from "../assets/images/icons/add.png";
 import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
 import PixelButton from "../components/PixelButton.vue";
+import PartyCat from "../assets/images/cats/party cat.jpg";
 
 const appStore = useAppStore();
 const router = useRouter();
@@ -73,12 +74,20 @@ function loadMore() {
           </div>
         </div>
       </Card>
-      <div
-        v-if="appStore.sortedClasses.length > listLength"
-        @scroll="loadMore()"
-      >
+      <div v-if="appStore.sortedClasses.length > listLength">
         <PixelButton @click="loadMore()">MORE!</PixelButton>
       </div>
+
+      <Card v-if="appStore.user === 'none'">
+        <div class="flex flex-col gap-4 items-center">
+          <img :src="PartyCat" alt="Party Cat" class="w-32 min-h-28" />
+          <p>
+            Welcome! Sync your data to keep it safe. Or throw caution to the
+            wind and just start adding classes!
+          </p>
+          <PixelButton @click="router.push('/login')">Login</PixelButton>
+        </div>
+      </Card>
     </ul>
     <ClassModal
       :showModal="showModal"
