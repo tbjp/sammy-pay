@@ -2,7 +2,9 @@
 import { supabase } from "../lib/supabaseClient";
 
 let syncInterval
-let noUpstreamChanges = false
+let noUpstreamClassChanges = false
+let noUpstreamPayPeriodChanges = false
+
 
 function startSyncLoop(appStore) {
   syncInterval = setInterval(async () => {
@@ -48,9 +50,10 @@ async function onetimeSync(appStore) {
     await syncPayPeriods(appStore, since)
     appStore.needsSync = false
     console.log("Needs sync after sync: " + appStore.needsSync)
-    if (noUpstreamChanges) {
+    if (noUpstreamClassChanges && noUpstreamPayPeriodChanges) {
       setLastSyncedTime(appStore, new Date().toISOString())
-      noUpstreamChanges = false
+      noUpstreamClassChanges = false
+      noUpstreamPayPeriodChanges = false
       return
     }
 }
@@ -71,12 +74,14 @@ async function syncClasses(appStore, since) {
     const mergedClasses = appStore.mergeRecords(appStore.classes, upstreamClasses)
     appStore.classes = mergedClasses
     } else {
-      noUpstreamChanges = true
+      noUpstreamClassChanges = true
     }
 
     const toUpsert = appStore.classes
   .filter(cls => cls.needsSync)
   .map(({ needsSync, ...cleaned }) => cleaned)
+  console.log("Classes to upsert: ")
+  console.log(toUpsert)
 
     const toDelete = appStore.classes.filter(c => c._deleted)
 
@@ -87,7 +92,8 @@ async function syncClasses(appStore, since) {
           .upsert(toUpsert)
 
         if (!error) {
-          console.log('Synced classes and setting needsSync to false')
+          console.log("Synced classes:")
+          console.log(toUpsert)
           appStore.setSyncedClasses(toUpsert)
           await setLastSyncedTime(appStore, new Date().toISOString())
         }
@@ -126,7 +132,7 @@ async function syncPayPeriods(appStore, since) {
     const mergedPayPeriods = appStore.mergeRecords(appStore.payPeriods, upstreamPayPeriods)
     appStore.payPeriods = mergedPayPeriods
     } else {
-      noUpstreamChanges = true
+      noUpstreamPayPeriodChanges = true
     }
 
     const toUpsert = appStore.payPeriods

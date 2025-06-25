@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ConfirmationModal from "./components/ConfirmationModal.vue";
 import { useAppStore } from "./stores/store";
-import { onetimeSync } from "./utilities/syncLoop";
+import { sync } from "./utilities/sync";
 
 const appStore = useAppStore();
 
@@ -45,7 +45,7 @@ function toggleConfirmationModal() {
 <template>
   <div class="flex flex-col h-dvh max-w-[480px] w-lvw overflow-hidden relative">
     <div v-if="appStore.user">Hello {{ appStore.user.email }}</div>
-    <button @click="onetimeSync(appStore)">Sync</button>
+    <button @click="sync()">Sync</button>
     <div
       class="flex-1 flex flex-col gap-4 items-center overflow-y-auto px-8 hide-scrollbar"
     >

@@ -55,4 +55,4 @@ window.addEventListener('storage', (event) => {
   }
 })
 
-startSyncLoop(appStore)
+// startSyncLoop(appStore)
