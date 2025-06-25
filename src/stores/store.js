@@ -17,7 +17,6 @@ export const useAppStore = defineStore('app', {
     classes: [],
     dataSeeded: false,
     lastSyncedAt: null,
-    needsSync: false,
   }),
 
   getters: {
@@ -28,8 +27,13 @@ export const useAppStore = defineStore('app', {
     sortedClasses(state) {
       return [...state.getUndeletedClasses].sort((b, a) => a.class_date.localeCompare(b.class_date));
     },
+
+    getUndeletedPayPeriods(state) {
+      return state.payPeriods.filter(pp => !pp._deleted)
+    },
+
     sortedPayPeriods(state) {
-      return [...state.payPeriods].sort((b, a) => a.start_date.localeCompare(b.start_date));
+      return [...state.getUndeletedPayPeriods].sort((b, a) => a.start_date.localeCompare(b.start_date));
     },
   },
 
@@ -94,7 +98,6 @@ export const useAppStore = defineStore('app', {
           end_date: end.toISOString().split("T")[0],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          needsSync: true,
         }
 
         this.payPeriods.push(payPeriod)
@@ -116,7 +119,6 @@ export const useAppStore = defineStore('app', {
             bonus_pay_per_student: randomInt(1, 11),
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-            needsSync: true,
           })
         }
       }
@@ -132,10 +134,8 @@ export const useAppStore = defineStore('app', {
         end_date: end_date,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        needsSync: true,
       }
       this.payPeriods.unshift(newPeriod)
-      this.needsSync = true
     },
 
     editPayPeriod({ id, start_date, end_date }) {
@@ -147,8 +147,6 @@ export const useAppStore = defineStore('app', {
       periodItem.start_date = start_date
       periodItem.end_date = end_date
       periodItem.updated_at = new Date().toISOString()
-      periodItem.needsSync = true
-      this.needsSync = true
     },
 
     deletePayPeriod(id) {
@@ -157,25 +155,13 @@ export const useAppStore = defineStore('app', {
         if (pp.id === id) {
           pp.updated_at = new Date().toISOString()
           pp._deleted = true
-          pp.needsSync = true
         }
         return pp
       })
-      this.needsSync = true
     },
 
     deleteSyncedPayPeriods(payPeriods) {
       this.payPeriods = this.payPeriods.filter(pp => !payPeriods.some(pp => pp.id === pp.id))
-    },
-
-    setSyncedPayPeriods(syncedPayPeriods) {
-      this.payPeriods = this.payPeriods.map(pp => {
-        if (syncedPayPeriods.some(syncedPP => syncedPP.id === pp.id)) {
-          console.log("Setting needsSync to false for pay period: ", pp.id)
-          pp.needsSync = false
-        }
-        return pp
-      })
     },
 
     // Class actions
@@ -192,10 +178,8 @@ export const useAppStore = defineStore('app', {
         end_time: new Date(endTime).toISOString(),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        needsSync: true,
       }
       this.classes.unshift(newClass)
-      this.needsSync = true
     },
 
     editClass({ id, class_date, num_students, num_bonus_students, base_pay_per_class, bonus_pay_per_student, hours, minutes }) {
@@ -212,8 +196,6 @@ export const useAppStore = defineStore('app', {
       const endTime = new Date(class_date).getTime() + 1000 * 60 * 60 * hours + 1000 * 60 * minutes
       classItem.end_time = new Date(endTime).toISOString()
       classItem.updated_at = new Date().toISOString()
-      classItem.needsSync = true
-      this.needsSync = true
     },
 
     deleteClass(id) {
@@ -222,22 +204,6 @@ export const useAppStore = defineStore('app', {
         if (cls.id === id) {
           cls.updated_at = new Date().toISOString()
           cls._deleted = true
-          cls.needsSync = true
-        }
-        return cls
-      })
-      this.needsSync = true
-    },
-
-    deleteSyncedClasses(classes) {
-      this.classes = this.classes.filter(cls => !classes.some(c => c.id === cls.id))
-    },
-
-    setSyncedClasses(syncedClasses) {
-      this.classes = this.classes.map(cls => {
-        if (syncedClasses.some(syncedCls => syncedCls.id === cls.id)) {
-          console.log("Setting needsSync to false for class: ", cls.id)
-          cls.needsSync = false
         }
         return cls
       })

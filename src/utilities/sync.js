@@ -2,13 +2,15 @@ import { supabase } from "../lib/supabaseClient";
 import { useAppStore } from "../stores/store";
 
 export async function sync() {
-  await syncTable("classes")
-  await syncTable("pay_periods")
+  const appStore = useAppStore()
+  if (!navigator.onLine || !appStore.user) return
+
+  await syncTable("classes", appStore)
+  await syncTable("pay_periods", appStore)
 }
 
-async function syncTable(table) {
+async function syncTable(table, appStore) {
   const storeTable = table === "classes" ? "classes" : "payPeriods";
-  const appStore = useAppStore()
 
   const { data: upstreamDatabase, error: error1 } = await supabase.from(table).select('*').eq('user_id', appStore.user.id)
 
