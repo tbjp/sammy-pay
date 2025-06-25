@@ -44,9 +44,6 @@ function toggleConfirmationModal() {
 
 <template>
   <div class="flex flex-col h-dvh max-w-[480px] w-lvw overflow-hidden relative">
-    <div v-if="appStore.user !== 'none'">
-      Hello {{ appStore.user.email }} <button @click="sync()">Sync</button>
-    </div>
     <div
       class="flex-1 flex flex-col gap-4 items-center overflow-y-auto px-8 hide-scrollbar"
     >
