@@ -1,4 +1,6 @@
 <!-- TODO: Delete database option with online -->
+<!-- TODO: Handle OTP error -->
+<!-- TODO: Fix logging out not wiping store -->
 
 <script setup>
 import { useAppStore } from "../stores/store";
@@ -11,11 +13,6 @@ import exportCSV from "../utilities/export";
 
 const appStore = useAppStore();
 const router = useRouter();
-
-function doStuff() {
-  appStore.seedData();
-  router.push("/");
-}
 
 function logOut() {
   appStore.logout();

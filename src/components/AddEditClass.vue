@@ -8,6 +8,7 @@ import Calendar from "../assets/images/icons/calendar.png";
 import Money from "../assets/images/icons/money.png";
 import PixelButton from "./PixelButton.vue";
 import Oops from "../assets/images/cats/oops cat.jpg";
+import Add from "../assets/images/icons/add.png";
 
 const props = defineProps({
   showModal: {
@@ -84,15 +85,15 @@ const handleSubmit = () => {
   }
 
   // Reset form after successful submission
-  newClass.value = {
-    class_date: "",
-    num_students: 1,
-    num_bonus_students: 0,
-    base_pay_per_class: 0,
-    bonus_pay_per_student: 0,
-    hours: null,
-    minutes: null,
-  };
+  // newClass.value = {
+  //   class_date: "",
+  //   num_students: 1,
+  //   num_bonus_students: 0,
+  //   base_pay_per_class: 0,
+  //   bonus_pay_per_student: 0,
+  //   hours: null,
+  //   minutes: null,
+  // };
 
   toggleModal();
 };
@@ -106,20 +107,30 @@ function deleteClass() {
   emit("onClassDeleted");
 }
 
+// Use values from most recently added class
 const newClass = ref({
-  class_date: "",
-  num_students: 1,
-  num_bonus_students: 0,
-  base_pay_per_class: 0,
-  bonus_pay_per_student: 0,
-  hours: null,
-  minutes: null,
+  class_date: new Date().toISOString().split("Z")[0].slice(0, -7),
+  num_students: appStore.classes.at(0)?.num_students ?? 1,
+  num_bonus_students: appStore.classes.at(0)?.num_bonus_students ?? 0,
+  base_pay_per_class: appStore.classes.at(0)?.base_pay_per_class ?? 0,
+  bonus_pay_per_student: appStore.classes.at(0)?.bonus_pay_per_student ?? 0,
+  hours: 1,
+  minutes: 0,
 });
+
+console.log(newClass.value);
+console.log(appStore.classes.at(0));
 
 const confirmationDialog = ref(false);
 
 function toggleConfirmationDialog() {
   confirmationDialog.value = !confirmationDialog.value;
+}
+
+const showExtraOptions = ref(false);
+
+function toggleExtraOptions() {
+  showExtraOptions.value = !showExtraOptions.value;
 }
 
 watch(
@@ -159,12 +170,12 @@ watch(
             {{ currentClass ? "Edit Class" : "Add Class" }}
           </h3>
           <form
-            class="flex flex-col gap-4 text-xs text-left wrap-normal px-6"
+            class="flex flex-col gap-4 text-xs text-left wrap-normal px-3"
             @submit.prevent="handleSubmit"
           >
             <div class="flex items-center gap-2">
-              <span class="w-10 h-6">
-                <img :src="Calendar" alt="Calendar" class="w-6 h-6" />
+              <span class="w-10 max-w-8 min-w-6 h-6">
+                <img :src="Calendar" alt="Calendar" class="w-6 h-6 min-w-6" />
               </span>
               <input
                 type="datetime-local"
@@ -172,7 +183,7 @@ watch(
                 v-model="newClass.class_date"
               />
             </div>
-            <div class="flex items-center gap-2">
+            <div class="items-center gap-2 hidden">
               <span class="w-10 h-6"> </span>
               <input
                 type="number"
@@ -196,52 +207,89 @@ watch(
               <div class="flex-1/3">class length</div>
             </div>
             <div class="flex items-center gap-2">
-              <span class="w-10 h-6">
-                <img :src="Happy" alt="Happy" class="w-6 h-6" />
+              <span class="w-10 max-w-8 min-w-6 h-6">
+                <img :src="Happy" alt="Happy" class="w-6 h-6 min-w-6" />
               </span>
-              <input
+              <select v-model="newClass.num_students" class="sammy-input">
+                <option v-for="n in 100" :key="n" :value="n">{{ n }}</option>
+              </select>
+              <!-- <input
                 type="number"
                 class="sammy-input"
                 v-model="newClass.num_students"
                 min="1"
                 step="1"
-              />
-              <div class="flex-1/3">total students</div>
+              /> -->
+              <div class="flex-1/3">total</div>
             </div>
             <div class="flex items-center gap-2">
-              <span class="w-10 h-6"></span>
-              <input
+              <span class="w-10 max-w-8 min-w-6 h-6"></span>
+              <select v-model="newClass.num_bonus_students" class="sammy-input">
+                <option
+                  v-for="n in Array.from({ length: 101 }, (_, i) => i)"
+                  :key="n"
+                  :value="n"
+                >
+                  {{ n }}
+                </option>
+              </select>
+              <!-- <input
                 type="number"
                 class="sammy-input"
                 v-model="newClass.num_bonus_students"
                 min="0"
                 step="1"
-              />
-              <div class="flex-1/3">pre bonus students</div>
+              /> -->
+              <div class="flex-1/3">pre bonus</div>
             </div>
             <div class="flex items-center gap-2">
-              <span class="w-10 h-6">
-                <img :src="Money" alt="Money" class="h-5" />
-              </span>
-              <input
-                type="number"
-                class="sammy-input"
-                v-model="newClass.base_pay_per_class"
-                min="0"
-                step="0.01"
-              />
-              <div class="flex-1/3">base pay per class</div>
+              <span class="w-10 max-w-8 min-w-6 h-6"></span>
+              <div
+                @click="toggleExtraOptions"
+                class="flex items-center gap-2 cursor-pointer"
+              >
+                <span>Extra options</span>
+                <img
+                  :src="Add"
+                  alt="Open extra options"
+                  :class="{ hidden: showExtraOptions }"
+                  class="w-4 h-4 min-w-4"
+                /><img
+                  :src="Exit"
+                  alt="Close extra options"
+                  :class="{ hidden: !showExtraOptions }"
+                  class="w-4 h-4 min-w-4"
+                />
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="w-10 h-6"></span>
-              <input
-                type="number"
-                class="sammy-input"
-                v-model="newClass.bonus_pay_per_student"
-                min="0"
-                step="0.01"
-              />
-              <div class="flex-1/3">bonus pay per student</div>
+            <div
+              :class="{ hidden: !showExtraOptions }"
+              class="flex flex-col gap-4"
+            >
+              <div class="flex items-center gap-2">
+                <span class="w-10 max-w-8 min-w-6 h-6">
+                  <img :src="Money" alt="Money" class="h-5 min-w-5" />
+                </span>
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.base_pay_per_class"
+                  min="0"
+                  step="0.01"
+                />
+                <div class="flex-1/3">base pay per class</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-10 max-w-8 min-w-6 h-6"></span>
+                <input
+                  type="number"
+                  class="sammy-input"
+                  v-model="newClass.bonus_pay_per_student"
+                  min="0"
+                  step="0.01"
+                />
+                <div class="flex-1/3">bonus pay per student</div>
+              </div>
             </div>
             <div class="flex justify-center gap-10">
               <PixelButton>{{ currentClass ? "EDIT" : "ADD" }}</PixelButton>
@@ -252,6 +300,9 @@ watch(
                 <img :src="Delete" alt="Delete" class="w-8 h-8" />
               </button>
             </div>
+            <p class="font-display-pixel text-lg text-center">
+              ${{ appStore.calculatePay(newClass) }} earned!
+            </p>
           </form>
 
           <div
