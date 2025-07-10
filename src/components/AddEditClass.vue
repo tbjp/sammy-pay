@@ -108,7 +108,16 @@ function deleteClass() {
   emit("onClassDeleted");
 }
 
-const mostRecentClass = computed(() => appStore.mostRecentClass);
+const mostRecentClass = ref(appStore.mostRecentClass);
+
+watch(
+  () => appStore.classes,
+  () => {
+    console.log("Most recent class updated");
+    mostRecentClass.value = appStore.mostRecentClass;
+  },
+  { deep: true },
+);
 
 const newClass = ref({
   class_date:
