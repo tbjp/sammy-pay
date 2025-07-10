@@ -115,6 +115,20 @@ watch(
   () => {
     console.log("Most recent class updated");
     mostRecentClass.value = appStore.mostRecentClass;
+    if (!props.showModal) {
+      newClass.value = {
+        class_date:
+          mostRecentClass.value?.class_date ??
+          new Date().toISOString().split("Z")[0].slice(0, -7),
+        num_students: mostRecentClass.value?.num_students ?? 1,
+        num_bonus_students: mostRecentClass.value?.num_bonus_students ?? 0,
+        base_pay_per_class: mostRecentClass.value?.base_pay_per_class ?? 0,
+        bonus_pay_per_student:
+          mostRecentClass.value?.bonus_pay_per_student ?? 0,
+        hours: 1,
+        minutes: 0,
+      };
+    }
   },
   { deep: true },
 );
