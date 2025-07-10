@@ -35,6 +35,13 @@ export const useAppStore = defineStore('app', {
     sortedPayPeriods(state) {
       return [...state.getUndeletedPayPeriods].sort((b, a) => a.start_date.localeCompare(b.start_date));
     },
+
+    mostRecentClass(state) {
+      if (!state.classes.length) {
+        return null;
+      }
+      return state.classes.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))[0];
+    },
   },
 
   actions: {

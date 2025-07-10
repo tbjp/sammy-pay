@@ -9,6 +9,7 @@ import Money from "../assets/images/icons/money.png";
 import PixelButton from "./PixelButton.vue";
 import Oops from "../assets/images/cats/oops cat.jpg";
 import Add from "../assets/images/icons/add.png";
+import { computed } from "vue";
 
 const props = defineProps({
   showModal: {
@@ -107,19 +108,19 @@ function deleteClass() {
   emit("onClassDeleted");
 }
 
-// Use values from most recently added class
+const mostRecentClass = computed(() => appStore.mostRecentClass);
+
 const newClass = ref({
-  class_date: new Date().toISOString().split("Z")[0].slice(0, -7),
-  num_students: appStore.classes.at(0)?.num_students ?? 1,
-  num_bonus_students: appStore.classes.at(0)?.num_bonus_students ?? 0,
-  base_pay_per_class: appStore.classes.at(0)?.base_pay_per_class ?? 0,
-  bonus_pay_per_student: appStore.classes.at(0)?.bonus_pay_per_student ?? 0,
+  class_date:
+    mostRecentClass.value?.class_date ??
+    new Date().toISOString().split("Z")[0].slice(0, -7),
+  num_students: mostRecentClass.value?.num_students ?? 1,
+  num_bonus_students: mostRecentClass.value?.num_bonus_students ?? 0,
+  base_pay_per_class: mostRecentClass.value?.base_pay_per_class ?? 0,
+  bonus_pay_per_student: mostRecentClass.value?.bonus_pay_per_student ?? 0,
   hours: 1,
   minutes: 0,
 });
-
-console.log(newClass.value);
-console.log(appStore.classes.at(0));
 
 const confirmationDialog = ref(false);
 
