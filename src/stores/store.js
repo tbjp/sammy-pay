@@ -123,7 +123,6 @@ export const useAppStore = defineStore('app', {
       if (this.user === "none") {
         this.payPeriods = []
         this.classes = []
-        this.dataSeeded = false
       } else {
         this.payPeriods = this.payPeriods.map(pp => ({ ...pp, _deleted: true }))
         this.classes = this.classes.map(cls => ({ ...cls, _deleted: true }))
