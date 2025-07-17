@@ -118,6 +118,19 @@ export const useAppStore = defineStore('app', {
 
       this.dataSeeded = true
     },
+
+    wipeData() {
+      if (this.user === "none") {
+        this.payPeriods = []
+        this.classes = []
+        this.dataSeeded = false
+      } else {
+        this.payPeriods = this.payPeriods.map(pp => ({ ...pp, _deleted: true }))
+        this.classes = this.classes.map(cls => ({ ...cls, _deleted: true }))
+        debouncedSync()
+      }
+    },
+
     // Pay Period actions
     addPayPeriod({ start_date, end_date }) {
       const newPeriod = {
