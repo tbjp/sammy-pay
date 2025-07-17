@@ -17,7 +17,6 @@ app.use(router)
 app.mount('#app')
 
 const appStore = useAppStore()
-window.appStore = appStore
 
 appStore.fetchUser()
 
