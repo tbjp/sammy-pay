@@ -2,7 +2,8 @@ import { useAppStore } from '../stores/store'
 
 function exportCSV(key) {
   const store = useAppStore()
-  const rows = store[key]
+  // get rows from store without deleted items
+  const rows = store[key].filter(row => !row._deleted)
 
   if (!rows.length) return
 
