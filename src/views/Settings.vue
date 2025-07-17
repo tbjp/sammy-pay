@@ -1,18 +1,22 @@
-<!-- TODO: Delete database option with online -->
 <!-- TODO: Handle OTP error -->
-<!-- TODO: Fix logging out not wiping store -->
+<!-- TODO: Fix logging out not wiping store (sometimes works) -->
 
 <script setup>
 import { useAppStore } from "../stores/store";
-import SammyButton from "../components/SammyButton.vue";
 import PixelButton from "../components/PixelButton.vue";
-import ChevronRight from "../assets/images/icons/chevron/right.png";
 import Star from "../assets/images/star.webp";
 import { useRouter } from "vue-router";
 import exportCSV from "../utilities/export";
+import WipeDataConfirmation from "../components/WipeDataConfirmation.vue";
+import { ref } from "vue";
 
 const appStore = useAppStore();
 const router = useRouter();
+const showModal = ref(false);
+
+function toggleModal() {
+  showModal.value = !showModal.value;
+}
 
 function logOut() {
   appStore.logout();
@@ -42,6 +46,8 @@ function logOut() {
       Export pay periods
     </h3>
     <PixelButton @click="exportCSV('payPeriods')">Export</PixelButton>
+    <h3 class="font-display-pixel text-sm text-left w-full">Wipe data</h3>
+    <PixelButton @click="toggleModal()">Wipe data</PixelButton>
     <!-- Show div if URL includes localhost -->
     <!-- <div v-if="window.location.hostname === 'localhost'">
       <PixelButton @click="sync()">Sync</PixelButton>
@@ -58,6 +64,7 @@ function logOut() {
       </SammyButton>
     </div> -->
   </div>
+  <WipeDataConfirmation :showModal="showModal" @closeModal="toggleModal()" />
 </template>
 
 <style scoped></style>
