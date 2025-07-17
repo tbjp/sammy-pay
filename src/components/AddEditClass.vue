@@ -153,6 +153,10 @@ function toggleConfirmationDialog() {
 
 const showExtraOptions = ref(false);
 
+if (appStore.classes.length === 0) {
+  showExtraOptions.value = true;
+}
+
 function toggleExtraOptions() {
   showExtraOptions.value = !showExtraOptions.value;
 }
